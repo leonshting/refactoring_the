@@ -6,8 +6,8 @@
 #define STRESS_REC_REFACTORED_DATA_POINTS_H
 
 #include <complex>
-
 using namespace std;
+
 
 typedef complex<double> cd;
 
