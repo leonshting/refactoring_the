@@ -7,13 +7,24 @@
 
 #include <vector>
 #include <tuple>
+#include <string>
+#include <fstream>
+
+#include "data_points.h"
 
 using namespace std;
 
-class border {
+class side
+{
 public:
-    border()
-    vector<tuple<double, double>> verteces;
+    side(fstream &side_stream);
+    vector<data_point> verteces;
+};
+
+template <typename T> class border {
+public:
+    border(string filename);
+    vector<T> sides;
 };
 
 

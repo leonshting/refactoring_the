@@ -2,8 +2,8 @@
 // Created by leonsht on 2/25/16.
 //
 
-#include <fstream>
 #include "init_data.h"
+#include <fstream>
 
 init_data::init_data(string i_data, string i_borders):files_w_data(i_data), files_w_borders(i_borders)
 {
