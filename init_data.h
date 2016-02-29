@@ -9,6 +9,10 @@
 #include <string>
 #include <complex>
 #include <vector>
+#include <unordered_map>
+#include <list>
+#include <tuple>
+#include <map>
 
 #include "data_points.h"
 
@@ -20,12 +24,12 @@ typedef complex<double> cd;
 
 class init_data {
 public:
-    init_data(string i_data, string i_borders);
-    vector<data_point> a_data;
+    init_data(string i_data, string i_cpoints);
+    vector<data_points<data_point_with_azimuth> > data_points_collection;
+    map<pair<string, string>, data_point> cpoints;
 
 private:
-    string files_w_data, files_w_borders;
-    vector <string> f_data, f_borders;
+    string files_w_data, files_w_cpoints;
 };
 
 
