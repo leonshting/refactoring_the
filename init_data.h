@@ -24,10 +24,10 @@ typedef complex<double> cd;
 
 class init_data {
 public:
-    init_data(string i_data, string i_cpoints);
+    init_data(string& i_data, string& i_cpoints);
     vector<data_points<data_point_with_azimuth> > data_points_collection;
-    map<pair<string, string>, data_point> cpoints;
-
+    map<pair<string, string>, collocation_point> cpoints;
+    multimap<string, collocation_point> key1_cpoints;
 private:
     string files_w_data, files_w_cpoints;
 };

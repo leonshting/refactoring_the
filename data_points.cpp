@@ -28,7 +28,7 @@ data_point_with_azimuth::data_point_with_azimuth(double x, double y, double azim
         data_point(x,y), Azimuth(azimuth), Azimuth_error(azimuth_error) { }
 
 
-/*container class*/
-
-
-
+collocation_point::collocation_point(ifstream &data_stream, int en): data_point(data_stream) {
+    data_stream >> areas.first >> areas.second;
+    equation_num = en;
+}

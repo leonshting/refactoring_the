@@ -32,6 +32,13 @@ public:
     data_point_with_azimuth(ifstream &data_stream);
 };
 
+class collocation_point: public data_point
+{
+public:
+    pair<string, string> areas;
+    int equation_num;
+    collocation_point(ifstream &data_stream, int en = 0);
+};
 template <typename T> class data_points {
 public:
     int number_of_points;
@@ -42,6 +49,7 @@ public:
 private:
     vector<T> data;
 };
+
 
 template <typename T>
 data_points<T>::data_points(string &filename){
