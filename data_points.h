@@ -43,8 +43,8 @@ template <typename T> class data_points {
 public:
     int number_of_points;
     string tag;
-    data_points(string &filename);
-
+    data_points(string &filename, int en = 0);
+    int equation_num;
 
 private:
     vector<T> data;
@@ -52,8 +52,9 @@ private:
 
 
 template <typename T>
-data_points<T>::data_points(string &filename){
+data_points<T>::data_points(string &filename, int en){
     int N = 0;
+    equation_num = en;
     ifstream stream_data(filename);
     tag = filename;
     while(!stream_data.eof())
