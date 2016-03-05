@@ -20,17 +20,22 @@ using namespace std;
 
 typedef complex<double> cd;
 
+class simple_data
+{
+public:
+    simple_data(string& i_data);
+    map<string, data_points<data_point_with_azimuth> > data_points_collection;
+    string files_w_data;
+};
 
 
-class init_data {
+class init_data:public simple_data {
 public:
     init_data(string& i_data, string& i_cpoints);
-    map <string, data_points<data_point_with_azimuth> > data_points_collection;
     multimap<pair<string, string>, collocation_point> cpoints;
     multimap<string, collocation_point> key1_cpoints;
     int num_of_collocation_points;
-private:
-    string files_w_data, files_w_cpoints;
+    string files_w_cpoints;
 };
 
 

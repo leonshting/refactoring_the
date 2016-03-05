@@ -45,14 +45,14 @@ MatrixXcd SRSolver::Vandermonde_for_cell(string key, int ORDER) {
 }
 
 void SRSolver::update_enums(multimap<string,collocation_point>::iterator i, string &key) {
-    colloc_enum.insert({{key, (i->second.areas.second != key)? i->second.areas.second: i->second.areas.first, i->second.equation_num}, values++});
-    colloc_enum.insert({{(i->second.areas.second != key)? i->second.areas.second: i->second.areas.first, key,  i->second.equation_num}, values++});
+    colloc_enum.insert({make_tuple(key, (i->second.areas.second != key)? i->second.areas.second: i->second.areas.first, i->second.equation_num), values++});
+    colloc_enum.insert({make_tuple((i->second.areas.second != key)? i->second.areas.second: i->second.areas.first, key,  i->second.equation_num), values++});
 
 }
 
 VectorXcd SRSolver::Ac(string key1, string key2, int num) {
     VectorXcd ac(2 * initData.num_of_collocation_points);
-    auto search = colloc_enum.find({key1, key2, num});
+    auto search = colloc_enum.find(make_tuple(key1, key2, num));
     ac.setZero();
     if(search != colloc_enum.end())
     {
@@ -64,8 +64,8 @@ VectorXcd SRSolver::Ac(string key1, string key2, int num) {
 
 VectorXcd SRSolver::C(string key1, string key2, int num) {
     VectorXcd c(2 * initData.num_of_collocation_points);
-    auto search = colloc_enum.find({key1, key2, num});
-    auto search2 = colloc_enum.find({key2, key1, num});
+    auto search = colloc_enum.find(make_tuple(key1, key2, num));
+    auto search2 = colloc_enum.find(make_tuple(key2, key1, num));
     c.setZero();
     if(search != colloc_enum.end())
     {
@@ -111,10 +111,20 @@ MatrixXcd SRSolver::Vandermonde_complete() {
     return vc;
 }
 
+VectorXcd SRSolver::Dsrep(calc f, data_point_with_azimuth z, int ORDER) {
+    VectorXcd dsrep(ORDER + 1);
+    dsrep = Vandermonde(f, z.complex_coordinates, ORDER) * exp(cd(0,-2*z.Azimuth>));
+}
+
+MatrixXcd SRSolver::Dsrep_for_cell(string key, int ORDER) {
+
+}
+
 complex<double> powZ(complex<double> z, int n) {
     return pow(z,n);
 }
 
 complex<double> powZ_conj(complex<double> z, int n) {
-    return conj(z)*powZ(z,n);
+    return conj(z)*powZ(z,n-1);
 }
+

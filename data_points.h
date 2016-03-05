@@ -56,7 +56,7 @@ data_points<T>::data_points(string &filename, int en){
     int N = 0;
     equation_num = en;
     ifstream stream_data(filename);
-    tag = filename;
+    stream_data >> tag;
     while(!stream_data.eof())
     {
         T tmp(stream_data);

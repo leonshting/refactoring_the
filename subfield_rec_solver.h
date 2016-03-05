@@ -15,7 +15,7 @@ typedef cd (*calc)(cd, int);
 #define STRESS_REC_REFACTORED_SUBFIELD_REC_SOLVER_H
 
 cd powZ(cd z, int n);
-cd powZ_conj(cd z, int n);
+cd powZ_conj(cd z, int n);  //resulting power is n
 
 
 class SRSolver {
@@ -29,11 +29,13 @@ private:
     VectorXcd Vandermonde(calc f, cd z, int ORDER);
     VectorXcd Ac(string key1, string key2, int num);
     VectorXcd C(string key1, string key2, int num);
+    VectorXcd Dsrep(calc f, data_point_with_azimuth z, int ORDER);
 
     MatrixXcd Vandermonde_for_cell(string key, int ORDER);
     MatrixXcd Vandermonde_complete();
     MatrixXcd Ac_complete();
     MatrixXcd C_complete();
+    MatrixXcd Dsrep_for_cell(string key, int ORDER);
 
     inline void update_enums(multimap<string,collocation_point>::iterator, string&);
     init_data initData; settings Settings;

@@ -1,2 +1,0 @@
-12.34	2.34	./data1.txt	./data2.txt
-12.35	56.656	./data1.txt	./data2.txt
