@@ -10,9 +10,11 @@
 #include <vector>
 #include <fstream>
 
+#include "useful_linear_algebra.h"
+
 using namespace std;
 
-typedef complex<double> cd;
+
 
 class data_point
 {
@@ -45,8 +47,6 @@ public:
     string tag;
     data_points(string &filename, int en = 0);
     int equation_num;
-
-private:
     vector<T> data;
 };
 

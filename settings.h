@@ -3,6 +3,7 @@
 //
 #include <map>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -12,8 +13,11 @@ using namespace std;
 
 class settings {
 public:
+    int default_order;
+    settings(string &);
     settings();
     map<string, int> ORDERS;
+    int get_order(string &key);
 };
 
 

@@ -3,28 +3,31 @@
 //
 #include <eigen3/Eigen/SVD>
 #include <eigen3/Eigen/Dense>
+#include <tuple>
 
 #include "init_data.h"
 #include "settings.h"
-#include <tuple>
+#include "useful_linear_algebra.h"
 
 using namespace Eigen;
-typedef cd (*calc)(cd, int);
+using namespace aux_stuff;
 
 #ifndef STRESS_REC_REFACTORED_SUBFIELD_REC_SOLVER_H
 #define STRESS_REC_REFACTORED_SUBFIELD_REC_SOLVER_H
 
-cd powZ(cd z, int n);
-cd powZ_conj(cd z, int n);  //resulting power is n
+// !!!ORDER from settings
 
 
 class SRSolver {
 public:
-    MatrixXcd ABlock, AcBlock, CBlock;
+    enum potentials {Xi = 2, Phi =1};
+    MatrixXcd ABlock, AcBlock, CBlock, AResult, DSR_block, V, V_conj;
+    MatrixXd dDSR_block, dAResult;
     SRSolver(init_data &data);
     SRSolver(init_data &data, settings &S);
     map< tuple<string, string, int>, int> colloc_enum;
     vector<string> zones_enum;
+    void build_matrices();
 private:
     VectorXcd Vandermonde(calc f, cd z, int ORDER);
     VectorXcd Ac(string key1, string key2, int num);
@@ -35,7 +38,8 @@ private:
     MatrixXcd Vandermonde_complete();
     MatrixXcd Ac_complete();
     MatrixXcd C_complete();
-    MatrixXcd Dsrep_for_cell(string key, int ORDER);
+    MatrixXcd Dsrep_for_cell(calc f, string key, int ORDER);
+    MatrixXcd Dsrep_complete(calc f);
 
     inline void update_enums(multimap<string,collocation_point>::iterator, string&);
     init_data initData; settings Settings;

@@ -1,15 +1,12 @@
 //
 // Created by leonsht on 01.03.16.
 //
-
+#include <iostream>
 #include "subfield_rec_solver.h"
 
 SRSolver::SRSolver(init_data &data):initData(data)
 {
-    values = 0;
-    ABlock = Vandermonde_complete();
-    CBlock = C_complete();
-    AcBlock = Ac_complete();
+    Settings = settings::settings();
 }
 
 SRSolver::SRSolver(init_data &data, settings &S):SRSolver(data)
@@ -41,7 +38,6 @@ MatrixXcd SRSolver::Vandermonde_for_cell(string key, int ORDER) {
     }
     zones_enum.push_back(initData.data_points_collection.find(key)->second.tag);
     return vandermonde;
-
 }
 
 void SRSolver::update_enums(multimap<string,collocation_point>::iterator i, string &key) {
@@ -96,35 +92,88 @@ MatrixXcd SRSolver::C_complete() {
 }
 
 MatrixXcd SRSolver::Vandermonde_complete() {
-    MatrixXcd vc(0,0);
+    /*MatrixXcd vc(0,0);
     map<string, data_points<data_point_with_azimuth> >::iterator i;
     for(i = initData.data_points_collection.begin(); i != initData.data_points_collection.end(); ++i)
     {
         MatrixXcd tmp;
+
         MatrixXcd old = vc;
-        tmp = Vandermonde_for_cell(i->first, 5);
+        tmp = Vandermonde_for_cell(i->second.tag, Settings.get_order(i->second.tag));
+        vc = catMat(old, tmp, CAT::RightBottom);
+
         vc.conservativeResize(old.rows() + tmp.rows(), old.cols() + tmp.cols());
         vc.bottomLeftCorner(old.rows(), 0).setZero();
         vc.topRightCorner(0, old.cols()).setZero();
         vc.bottomRightCorner(tmp.rows(), tmp.cols()) = tmp;
+    }*/
+    MatrixXcd ret(0,0);
+    int count = 0;
+    map<int, MatrixXcd> tmp_storage;
+    map<string, data_points<data_point_with_azimuth> >::iterator i;
+    for(i = initData.data_points_collection.begin(); i != initData.data_points_collection.end(); ++i)
+    {
+        tmp_storage.insert({i->second.equation_num, Vandermonde_for_cell(i->second.tag, Settings.get_order(i->second.tag))});
+        count++;
     }
-    return vc;
+    for(int i = 0; i<count; i++)
+    {
+        auto search = tmp_storage.find(i);
+        ret = catMat(ret, search->second, CAT::RightBottom);
+    }
+    return ret;
 }
 
 VectorXcd SRSolver::Dsrep(calc f, data_point_with_azimuth z, int ORDER) {
     VectorXcd dsrep(ORDER + 1);
-    dsrep = Vandermonde(f, z.complex_coordinates, ORDER) * exp(cd(0,-2*z.Azimuth>));
+    dsrep = Vandermonde(f, z.complex_coordinates, ORDER) * exp(cd(0,-2*z.Azimuth));
+    return dsrep;
 }
 
-MatrixXcd SRSolver::Dsrep_for_cell(string key, int ORDER) {
-
+MatrixXcd SRSolver::Dsrep_for_cell(calc f, string key, int ORDER) {
+    MatrixXcd dsrep_fc(0, ORDER+1);
+    auto search = initData.data_points_collection.find(key);
+    vector<data_point_with_azimuth>::iterator i;
+    VectorXcd sum; sum.setZero();
+    for(i = search->second.data.begin(); i != search->second.data.end(); ++i)
+    {
+        dsrep_fc.conservativeResize(dsrep_fc.rows()+1, NoChange);
+        VectorXcd tmp = Dsrep(f, *i, ORDER);
+        dsrep_fc.row(dsrep_fc.rows()-1) = tmp;
+    }
+    dsrep_fc.conservativeResize(dsrep_fc.rows()+1, NoChange);
+    return dsrep_fc;
 }
 
-complex<double> powZ(complex<double> z, int n) {
-    return pow(z,n);
+
+MatrixXcd SRSolver::Dsrep_complete(calc f) {
+    MatrixXcd ret(0,0);
+    int count = 0;
+    map<int, MatrixXcd> tmp_storage;
+    map<string, data_points<data_point_with_azimuth> >::iterator i;
+    for(i = initData.data_points_collection.begin(); i != initData.data_points_collection.end(); ++i)
+    {
+        tmp_storage.insert({i->second.equation_num, Dsrep_for_cell(f, i->first, Settings.get_order(i->second.tag))});
+        count++;
+    }
+    for(int i = 0; i<count; i++)
+    {
+        auto search = tmp_storage.find(i);
+        ret = catMat(ret, search->second, CAT::RightBottom);
+    }
+    return ret;
 }
 
-complex<double> powZ_conj(complex<double> z, int n) {
-    return conj(z)*powZ(z,n-1);
+void SRSolver::build_matrices() {
+    values = 0;
+    ABlock = Vandermonde_complete();
+    CBlock = C_complete();
+    AcBlock = Ac_complete();
+    AResult = -CBlock * AcBlock.inverse() * ABlock;
+    AResult = catMat(AResult, AResult, CAT::RightBottom);
+    V = Dsrep_complete(powZ);
+    V_conj = Dsrep_complete(powZ_conj);
+    DSR_block = catMat(V, V_conj, CAT::Right);
+    dDSR_block = matrix_complex_to_real(DSR_block, TRANSFORM::ImRe);
+    dAResult = matrix_complex_to_real(AResult, TRANSFORM::ReImImRe);
 }
-
