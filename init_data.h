@@ -26,6 +26,8 @@ public:
     simple_data(string& i_data);
     map<string, data_points<data_point_with_azimuth> > data_points_collection;
     string files_w_data;
+    int num_of_zones;
+    int total_num_of_points;
 };
 
 

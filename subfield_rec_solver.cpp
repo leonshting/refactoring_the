@@ -6,12 +6,16 @@
 
 SRSolver::SRSolver(init_data &data):initData(data)
 {
-    Settings = settings::settings();
+    Settings = settings();
+    EQU_part.conservativeResize(0,0);
+    EQU_part.setZero();
 }
 
-SRSolver::SRSolver(init_data &data, settings &S):SRSolver(data)
+SRSolver::SRSolver(init_data &data, settings &S):initData(data)
 {
     Settings = S;
+    EQU_part.conservativeResize(0,0);
+    EQU_part.setZero();
 }
 
 VectorXcd SRSolver::Vandermonde(calc f, cd z, int ORDER) {
@@ -36,7 +40,6 @@ MatrixXcd SRSolver::Vandermonde_for_cell(string key, int ORDER) {
         vandermonde.row(row_counter-1) = tmp;
         update_enums(i, key);
     }
-    zones_enum.push_back(initData.data_points_collection.find(key)->second.tag);
     return vandermonde;
 }
 
@@ -134,14 +137,15 @@ MatrixXcd SRSolver::Dsrep_for_cell(calc f, string key, int ORDER) {
     MatrixXcd dsrep_fc(0, ORDER+1);
     auto search = initData.data_points_collection.find(key);
     vector<data_point_with_azimuth>::iterator i;
-    VectorXcd sum; sum.setZero();
+    VectorXcd sum(ORDER+1); sum.setZero();
     for(i = search->second.data.begin(); i != search->second.data.end(); ++i)
     {
         dsrep_fc.conservativeResize(dsrep_fc.rows()+1, NoChange);
         VectorXcd tmp = Dsrep(f, *i, ORDER);
         dsrep_fc.row(dsrep_fc.rows()-1) = tmp;
+        sum += tmp;
     }
-    dsrep_fc.conservativeResize(dsrep_fc.rows()+1, NoChange);
+    update_norm(sum, search->second.equation_num);
     return dsrep_fc;
 }
 
@@ -161,6 +165,8 @@ MatrixXcd SRSolver::Dsrep_complete(calc f) {
         auto search = tmp_storage.find(i);
         ret = catMat(ret, search->second, CAT::RightBottom);
     }
+    MatrixXcd tmp = build_norm();
+    EQU_part = catMat(EQU_part, tmp, CAT::Right);
     return ret;
 }
 
@@ -171,9 +177,53 @@ void SRSolver::build_matrices() {
     AcBlock = Ac_complete();
     AResult = -CBlock * AcBlock.inverse() * ABlock;
     AResult = catMat(AResult, AResult, CAT::RightBottom);
+
     V = Dsrep_complete(powZ);
     V_conj = Dsrep_complete(powZ_conj);
+    // matrix of norm is made up in DSREP_COMPLETE functions
+
+    dEQU_part = matrix_complex_to_real(EQU_part, TRANSFORM::ReIm);
     DSR_block = catMat(V, V_conj, CAT::Right);
     dDSR_block = matrix_complex_to_real(DSR_block, TRANSFORM::ImRe);
     dAResult = matrix_complex_to_real(AResult, TRANSFORM::ReImImRe);
+}
+
+void SRSolver::update_norm(VectorXcd &to_add, int eq_num) {
+    norm.insert({eq_num, to_add});
+}
+
+MatrixXcd SRSolver::build_norm() {
+    MatrixXcd ret(0,0);
+    for(int i = 0; i<initData.num_of_zones; i++)
+    {
+        MatrixXcd tmp = get_norm(i).transpose();
+        ret = catMat(ret, tmp, CAT::RightBottom);
+    }
+    return ret;
+}
+
+VectorXcd SRSolver::get_norm(int key) {
+    auto search = norm.at(key);
+    return search;
+}
+
+VectorXd SRSolver::construct_RHS() {
+    int size = initData.num_of_collocation_points * 8 + initData.total_num_of_points + initData.num_of_zones;
+    VectorXd ret(size);
+    ret.setZero();
+    int tmp_start = ret.rows() - initData.num_of_zones;
+    map<string, data_points<data_point_with_azimuth> >::iterator i;
+    for(i = initData.data_points_collection.begin(); i != initData.data_points_collection.end(); ++i)
+        ret(tmp_start + i->second.equation_num) = i->second.number_of_points;
+    return ret;
+}
+
+void SRSolver::LSM_solve() {
+    VectorXd rhs = construct_RHS();
+    RHS = rhs;
+    MatrixXd mts(0,0), tmp(0,0);
+    tmp = catMat(dAResult, dDSR_block, CAT::Bottom);
+    mts = catMat(tmp, dEQU_part, CAT::Bottom);
+    JacobiSVD<MatrixXd> svd(mts, ComputeThinU | ComputeThinV);
+    dCoef = svd.solve(RHS);
 }
