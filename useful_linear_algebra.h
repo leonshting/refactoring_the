@@ -6,19 +6,22 @@
 #include <eigen3/Eigen/Dense>
 #include <complex>
 #include <tuple>
+#include <string>
 
 using namespace std;
 using namespace Eigen;
 
 typedef complex<double> cd;
 typedef cd (*calc)(cd, int);
+typedef string (*sub_pol)(int, int, cd);
 
 #ifndef STRESS_REC_REFACTORED_USEFULL_LINEAR_ALGEBRA_H
 #define STRESS_REC_REFACTORED_USEFULL_LINEAR_ALGEBRA_H
 
 cd powZ(cd z, int n);
 cd powZ_conj(cd z, int n);
-
+string PHI_SUB_NOPOLE(int num , int ORDER, cd coef);
+string print_complex(cd);
 
 
 namespace aux_stuff

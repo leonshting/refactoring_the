@@ -26,6 +26,11 @@ void text_output::make_polynoms() {
 }
 
 string text_output::make_polynom(data_points<data_point_with_azimuth> &subj) {
-    string ret;
-
+    string ret = "";
+    int num = subj.equation_num;
+    int ORDER = Settings.ORDERS.at(subj.tag);
+    for(int i = 0; i <= ORDER; i++)
+    {
+        
+    }
 }
