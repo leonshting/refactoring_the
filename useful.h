@@ -14,7 +14,7 @@ using namespace Eigen;
 
 typedef complex<double> cd;
 typedef cd (*calc)(cd, int, cd, cd, bool);
-typedef string (*sub_pol)(int, cd, cd, cd, bool);
+typedef string (*sub_pol)(int, cd, cd, cd, bool, bool);
 
 #ifndef STRESS_REC_REFACTORED_USEFULL_LINEAR_ALGEBRA_H
 #define STRESS_REC_REFACTORED_USEFULL_LINEAR_ALGEBRA_H
@@ -34,12 +34,12 @@ namespace aux_stuff
     cd powZ_POLE(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = true);
     cd powZ_conj_POLE(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = false);
 
-    string PHI_SUB_NOPOLE(int ORDER, cd coef, cd zero = cd(0.0,0.0), cd pole = cd(0.0, 0.0), bool pole_x = false);
-    string XI_SUB_NOPOLE(int ORDER, cd coef, cd zero = cd(0.0,0.0), cd pole = cd(0.0, 0.0), bool pole_x = false);
-    string PHI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x);
-    string XI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x);
-    string PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x);
-    string XI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x);
+    string PHI_SUB_NOPOLE(int ORDER, cd coef, cd zero = cd(0.0,0.0), cd pole = cd(0.0, 0.0), bool pole_x = false, bool D = true);
+    string XI_SUB_NOPOLE(int ORDER, cd coef, cd zero = cd(0.0,0.0), cd pole = cd(0.0, 0.0), bool pole_x = false, bool D = true);
+    string PHI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D);
+    string XI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D);
+    string PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D);
+    string XI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D);
 
 
     string print_complex(cd);

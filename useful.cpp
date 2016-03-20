@@ -42,41 +42,46 @@ string aux_stuff::print_complex(cd z) {
 
 }
 
-string aux_stuff::PHI_SUB_NOPOLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x) {
+string aux_stuff::PHI_SUB_NOPOLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D) {
     stringstream ret;
-    ret <<"("<< print_complex(coef) << ") * z**" << ORDER;
+    int tmp_order = D?ORDER:ORDER+1;
+    ret <<"("<< print_complex(coef) << ") * z**" << tmp_order << ((!D)?("/" + to_string(tmp_order)):"");
     return ret.str();
 }
 
-string aux_stuff::XI_SUB_NOPOLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x) {
+string aux_stuff::XI_SUB_NOPOLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D) {
     stringstream ret;
-    ret << "(z.conjugate())" << " * " << PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x);
+    ret << "(z.conjugate())" << " * " << PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D);
     return ret.str();
 }
 
-string aux_stuff::PHI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x) {
+string aux_stuff::PHI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D) {
     stringstream ret;
-    ret <<"("<< print_complex(coef) << ") * (z - " << print_complex(zero) << ")**" << ORDER;
+    int tmp_order = D?ORDER:ORDER+1;
+    ret <<"("<< print_complex(coef) << ") * (z - " << print_complex(zero) << ")**" << tmp_order << ((!D)?("/" + to_string(tmp_order)):"");
     return ret.str();
 }
 
-string aux_stuff::XI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x) {
+string aux_stuff::XI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D) {
     stringstream ret;
-    ret << "(z.conjugate())" << " * " + PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x);
-    return ret.str();
-}
-
-
-string aux_stuff::XI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x) {
-    if(pole_x)
-        return XI_SUB_ZERO(ORDER, coef, zero, pole, pole_x) + "/(z - " + print_complex(pole) + ")";
+    if(D)
+        ret << "(z.conjugate())" << " * " + PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D);
     else
-        return XI_SUB_ZERO(ORDER, coef, zero, pole, pole_x);
+        ret << PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D);
+    return ret.str();
 }
 
-string aux_stuff::PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x) {
+
+string aux_stuff::XI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D) {
     if(pole_x)
-        return PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x) + "/(z - " + print_complex(pole) + ")";
+        return XI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D) + "/(z - " + print_complex(pole) + ")";
     else
-        return PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x);
+        return XI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D);
+}
+
+string aux_stuff::PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D) {
+    if(pole_x)
+        return PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D) + "/(z - " + print_complex(pole) + ")";
+    else
+        return PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D);
 }

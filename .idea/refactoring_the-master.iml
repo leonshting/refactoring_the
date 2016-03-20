@@ -7,15 +7,15 @@
       <sourceFolder url="file://$MODULE_DIR$/useful.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/init_data.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/text_output.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/output.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/useful.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/subfield_rec_solver.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/text_output.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/data_points.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/subfield_rec_solver.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/settings.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/init_data.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/data_points.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/output.h" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">

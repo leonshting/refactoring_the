@@ -2,7 +2,7 @@
 
 #include "init_data.h"
 #include "subfield_rec_solver.h"
-#include "text_output.h"
+#include "output.h"
 
 using namespace std;
 using namespace aux_stuff;
@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     solver.build_matrices();
     cout << solver.dAResult << endl << endl << solver.dEQU_part << endl << endl << solver.dDSR_block << endl << endl;
     solver.LSM_solve();
-    text_output output(solver.dCoef, Settings, tmp1);
+    output output(solver.dCoef, Settings, tmp1);
     output.make_polynoms(PHI_SUB_ZERO_POLE, XI_SUB_ZERO_POLE);
     cout << endl << output.get_formatted_output();
 }
