@@ -18,24 +18,24 @@ SRSolver::SRSolver(init_data &data, settings &S):initData(data)
     EQU_part.setZero();
 }
 
-VectorXcd SRSolver::Vandermonde(calc f, cd z, int ORDER) {
+VectorXcd SRSolver::Vandermonde(calc f, cd z, int ORDER, string tag) {
     VectorXcd vandermonde(ORDER+1);
     vandermonde.setZero();
     for(int i = 0; i <= ORDER; i++)
     {
-        vandermonde(i) = f(z, i);
+        vandermonde(i) = f(z, i, Settings.get_zero(tag), Settings.get_pole(tag), Settings.get_pole_x(tag));
     }
     return vandermonde;
 }
 
-MatrixXcd SRSolver::Vandermonde_for_cell(string key, int ORDER) {
+MatrixXcd SRSolver::Vandermonde_for_cell(calc f, string key, int ORDER) {
     MatrixXcd vandermonde; int row_counter = 0;
     vandermonde.conservativeResize(0, ORDER+1); vandermonde.setZero();
 
     auto search = initData.key1_cpoints.equal_range(key);
     for(multimap<string,collocation_point>::iterator i = search.first; i != search.second; ++i)
     {
-        VectorXcd tmp = Vandermonde(powZ, i->second.complex_coordinates, ORDER);
+        VectorXcd tmp = Vandermonde(f, i->second.complex_coordinates, ORDER);
         vandermonde.conservativeResize(++row_counter, NoChange);
         vandermonde.row(row_counter-1) = tmp;
         update_enums(i, key);
@@ -94,7 +94,7 @@ MatrixXcd SRSolver::C_complete() {
     return ac_complete;
 }
 
-MatrixXcd SRSolver::Vandermonde_complete() {
+MatrixXcd SRSolver::Vandermonde_complete(calc f) {
     /*MatrixXcd vc(0,0);
     map<string, data_points<data_point_with_azimuth> >::iterator i;
     for(i = initData.data_points_collection.begin(); i != initData.data_points_collection.end(); ++i)
@@ -116,7 +116,7 @@ MatrixXcd SRSolver::Vandermonde_complete() {
     map<string, data_points<data_point_with_azimuth> >::iterator i;
     for(i = initData.data_points_collection.begin(); i != initData.data_points_collection.end(); ++i)
     {
-        tmp_storage.insert({i->second.equation_num, Vandermonde_for_cell(i->second.tag, Settings.get_order(i->second.tag))});
+        tmp_storage.insert({i->second.equation_num, Vandermonde_for_cell(f, i->second.tag, Settings.get_order(i->second.tag))});
         count++;
     }
     for(int i = 0; i<count; i++)
@@ -172,14 +172,14 @@ MatrixXcd SRSolver::Dsrep_complete(calc f) {
 
 void SRSolver::build_matrices() {
     values = 0;
-    ABlock = Vandermonde_complete();
+    ABlock = Vandermonde_complete(powZ_POLE);
     CBlock = C_complete();
     AcBlock = Ac_complete();
     AResult = -CBlock * AcBlock.inverse() * ABlock;
     AResult = catMat(AResult, AResult, CAT::RightBottom);
 
-    V = Dsrep_complete(powZ);
-    V_conj = Dsrep_complete(powZ_conj);
+    V = Dsrep_complete(powZ_POLE);
+    V_conj = Dsrep_complete(powZ_conj_POLE);
     // matrix of norm is made up in DSREP_COMPLETE functions
 
     dEQU_part = matrix_complex_to_real(EQU_part, TRANSFORM::ReIm);

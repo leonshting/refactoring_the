@@ -10,7 +10,7 @@
 #include <vector>
 #include <fstream>
 
-#include "useful_linear_algebra.h"
+#include "useful.h"
 
 using namespace std;
 

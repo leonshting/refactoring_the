@@ -7,7 +7,7 @@
 
 #include "init_data.h"
 #include "settings.h"
-#include "useful_linear_algebra.h"
+#include "useful.h"
 
 using namespace Eigen;
 using namespace aux_stuff;
@@ -34,13 +34,13 @@ public:
 
 
 private:
-    VectorXcd Vandermonde(calc f, cd z, int ORDER);
+    VectorXcd Vandermonde(calc f, cd z, int ORDER, string tag = "");
     VectorXcd Ac(string key1, string key2, int num);
     VectorXcd C(string key1, string key2, int num);
     VectorXcd Dsrep(calc f, data_point_with_azimuth z, int ORDER);
 
-    MatrixXcd Vandermonde_for_cell(string key, int ORDER);
-    MatrixXcd Vandermonde_complete();
+    MatrixXcd Vandermonde_for_cell(calc f, string key, int ORDER);
+    MatrixXcd Vandermonde_complete(calc f);
     MatrixXcd Ac_complete();
     MatrixXcd C_complete();
     MatrixXcd Dsrep_for_cell(calc f, string key, int ORDER);

@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream>
 
+#include "useful.h"
+
 using namespace std;
 
 #ifndef STRESS_REC_REFACTORED_SETTINGS_H
@@ -17,7 +19,15 @@ public:
     settings(string &);
     settings();
     map<string, int> ORDERS;
+    map<string, int> STARTS;
+    map<string, cd> POLES;
+    map<string, cd> ZEROES;
+    map<string, bool> POLES_X;
     int get_order(string &key);
+    int get_start(string &key);
+    cd get_zero(string &key);
+    cd get_pole(string &key);
+    bool get_pole_x(string &key);
 };
 
 

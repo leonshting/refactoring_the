@@ -7,7 +7,7 @@
 
 #include "settings.h"
 #include "init_data.h"
-#include "useful_linear_algebra.h"
+#include "useful.h"
 #include "data_points.h"
 
 
@@ -21,7 +21,9 @@ class text_output
 {
 public:
     text_output(VectorXd &answer, settings &S, init_data &it);
-
+    void make_polynoms(sub_pol, sub_pol);
+    string get_polynom(string & key);
+    string get_formatted_output();
 private:
     VectorXd Answer;
     VectorXcd cAnswer;
@@ -29,8 +31,7 @@ private:
     init_data initData;
     VectorXcd cAnswer_fromD(VectorXd &answer);
     map<string, string> tag_to_cpolynom;
-    void make_polynoms();
-    string make_polynom(data_points<data_point_with_azimuth> &subj);
+    string make_polynom(data_points<data_point_with_azimuth> &subj, sub_pol, sub_pol);
 };
 
 #endif //STRESS_REC_REFACTORED_TEXT_OUTPUT_H

@@ -2,6 +2,7 @@
 // Created by leonsht on 3/5/16.
 //
 
+
 #include <eigen3/Eigen/SVD>
 #include <eigen3/Eigen/Dense>
 #include <complex>
@@ -12,20 +13,38 @@ using namespace std;
 using namespace Eigen;
 
 typedef complex<double> cd;
-typedef cd (*calc)(cd, int);
-typedef string (*sub_pol)(int, int, cd);
+typedef cd (*calc)(cd, int, cd, cd, bool);
+typedef string (*sub_pol)(int, cd, cd, cd, bool);
 
 #ifndef STRESS_REC_REFACTORED_USEFULL_LINEAR_ALGEBRA_H
 #define STRESS_REC_REFACTORED_USEFULL_LINEAR_ALGEBRA_H
 
-cd powZ(cd z, int n);
-cd powZ_conj(cd z, int n);
-string PHI_SUB_NOPOLE(int num , int ORDER, cd coef);
-string print_complex(cd);
+#define ORDER_ABSENCE 10
+#define POLYNOMS_ARENT_READY 11
+
+#define BLANK_CD cd(0.0, 0.0)
+
+
 
 
 namespace aux_stuff
 {
+    cd powZ(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = false);
+    cd powZ_conj(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = false);
+    cd powZ_POLE(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = true);
+    cd powZ_conj_POLE(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = false);
+
+    string PHI_SUB_NOPOLE(int ORDER, cd coef, cd zero = cd(0.0,0.0), cd pole = cd(0.0, 0.0), bool pole_x = false);
+    string XI_SUB_NOPOLE(int ORDER, cd coef, cd zero = cd(0.0,0.0), cd pole = cd(0.0, 0.0), bool pole_x = false);
+    string PHI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x);
+    string XI_SUB_ZERO(int ORDER, cd coef, cd zero, cd pole, bool pole_x);
+    string PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x);
+    string XI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x);
+
+
+    string print_complex(cd);
+
+
     enum CAT {RightBottom = 1, Right = 2, Bottom = 3};
     enum TRANSFORM {ReIm = 1, ImRe = 2, ReImImRe = 3};
 
