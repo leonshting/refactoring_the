@@ -34,6 +34,14 @@ public:
     data_point_with_azimuth(ifstream &data_stream);
 };
 
+class data_point_with_stress : public data_point_with_azimuth
+{
+public:
+    double Stress;
+    data_point_with_stress(ifstream &data_stream);
+    data_point_with_stress(double x, double y, double azimuth, double azimuth_error, double stress);
+};
+
 class collocation_point: public data_point
 {
 public:

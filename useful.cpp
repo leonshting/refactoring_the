@@ -23,9 +23,18 @@ cd aux_stuff::powZ_conj_POLE(cd z, int n, cd zero, cd pole, bool pole_x) {
 
 cd aux_stuff::powZ_POLE(cd z, int n, cd zero, cd pole, bool pole_x) {
     if(pole_x)
-        return powZ(z - zero, n)/(z - zero);
+        return powZ(z - zero, n)/(z - pole);
     else
         return powZ(z-zero, n);
+}
+
+cd aux_stuff::powZ_integrated(cd z, int n, cd zero, cd pole, bool pole_x)
+{
+    if(pole_x)
+        return powZ(z-zero, n+1)/(z-pole)/(double)(n+1);
+        //is incorrect in general
+    else
+        return powZ(z-zero, n+1)/(double)(n+1);
 }
 
 string aux_stuff::print_complex(cd z) {
@@ -85,3 +94,4 @@ string aux_stuff::PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool p
     else
         return PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D);
 }
+

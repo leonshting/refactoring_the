@@ -7,6 +7,7 @@
 output::output(VectorXd &answer, settings &S, init_data &it): Answer(answer), Settings(S), initData(it)
 {
     cAnswer = cAnswer_fromD(Answer);
+    fin_ISREADY = false;
 }
 
 VectorXcd output::cAnswer_fromD(VectorXd &answer) {
@@ -25,6 +26,8 @@ void output::make_polynoms(sub_pol polPHI, sub_pol polXI) {
         tag_to_Ppolynom.insert({i->second.tag, make_Ppolynom(i->second, polPHI, polXI)});
     }
 }
+
+
 
 string output::make_Dpolynom(data_points<data_point_with_azimuth> &subj, sub_pol polPHI, sub_pol polXI) {
     stringstream ret;
@@ -49,7 +52,7 @@ string output::get_polynom(string &key) {
 
 string output::get_formatted_output() {
     stringstream ret;
-    if(tag_to_Dpolynom.empty() || tag_to_Ppolynom.empty()})
+    if(tag_to_Dpolynom.empty() || tag_to_Ppolynom.empty())
     {
         throw POLYNOMS_ARENT_READY;
     }
@@ -61,6 +64,9 @@ string output::get_formatted_output() {
             ret <<"P: " << tag_to_Ppolynom.at(i->second.tag) << endl;
         }
     }
+
+    if(fin_ISREADY)
+        ret << "Multiplicative constant: " << finAnswer(0) << endl << "Additive constant:" << finAnswer(1);
     return ret.str();
 }
 
@@ -89,5 +95,10 @@ cd output::getD(cd z, string tag) {
 }
 
 cd output::getP(cd z, string tag) {
-
+    int ORDER = Settings.ORDERS.at(tag);
+    cd ret;
+    for(int i = 0; i <= ORDER; i++)
+        ret += cAnswer(cAnswer.rows()/2 + Settings.get_start(tag) + i) * powZ_integrated(z, i, Settings.get_zero(tag), Settings.get_pole(tag), Settings.get_pole_x(tag));
+    return ret;
 }
+

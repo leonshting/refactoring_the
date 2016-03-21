@@ -26,6 +26,8 @@ public:
     string get_formatted_output();
     cd getD(cd z, string tag);
     cd getP(cd z, string tag);
+    Vector2d finAnswer;
+    bool fin_ISREADY;
 private:
     VectorXd Answer;
     VectorXcd cAnswer;

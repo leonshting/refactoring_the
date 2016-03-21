@@ -40,5 +40,14 @@ public:
     string files_w_cpoints;
 };
 
+class stress_data
+{
+public:
+    stress_data(string& i_sdata);
+    map<string, data_points<data_point_with_stress> > data_points_collection;
+    int num_of_zones;
+    int total_num_of_points;
+    string files_w_data;
+};
 
 #endif //STRESS_REC_REFACTORED_INIT_DATA_H

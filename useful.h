@@ -33,6 +33,8 @@ namespace aux_stuff
     cd powZ_conj(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = false);
     cd powZ_POLE(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = true);
     cd powZ_conj_POLE(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = false);
+    cd powZ_integrated(cd z, int n, cd zero = BLANK_CD, cd pole = BLANK_CD, bool pole_x = false);
+
 
     string PHI_SUB_NOPOLE(int ORDER, cd coef, cd zero = cd(0.0,0.0), cd pole = cd(0.0, 0.0), bool pole_x = false, bool D = true);
     string XI_SUB_NOPOLE(int ORDER, cd coef, cd zero = cd(0.0,0.0), cd pole = cd(0.0, 0.0), bool pole_x = false, bool D = true);

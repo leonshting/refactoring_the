@@ -34,3 +34,18 @@ simple_data::simple_data(string &i_data): files_w_data(i_data){
     num_of_zones = ct;
     total_num_of_points = tn_points;
 }
+
+stress_data::stress_data(string &i_sdata): files_w_data(i_sdata) {
+    ifstream stream_data(files_w_data);
+    int ct = 0; int tn_points = 0;
+    while(!stream_data.eof())
+    {
+        string tmp_string;
+        stream_data >> tmp_string;
+        data_points<data_point_with_stress> tmp_data(tmp_string, ct++);
+        data_points_collection.insert({tmp_string, tmp_data});
+        tn_points += tmp_data.number_of_points;
+    }
+    num_of_zones = ct;
+    total_num_of_points = tn_points;
+}
