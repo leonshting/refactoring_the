@@ -31,10 +31,10 @@ string output::make_Dpolynom(data_points<data_point_with_azimuth> &subj, sub_pol
     int ORDER = Settings.ORDERS.at(subj.tag);
     for(int i = 0; i <= ORDER; i++)
     {
-        ret << polPHI(i, cAnswer(Settings.get_start(subj.tag)), Settings.get_zero(subj.tag),
+        ret << polPHI(i, cAnswer(Settings.get_start(subj.tag) + i), Settings.get_zero(subj.tag),
                       Settings.get_pole(subj.tag), Settings.get_pole_x(subj.tag), true);
             ret << " + ";
-        ret << polXI(i, cAnswer(ORDER + 1 + Settings.get_start(subj.tag)), Settings.get_zero(subj.tag),
+        ret << polXI(i, cAnswer(cAnswer.rows()/2 + Settings.get_start(subj.tag) + i), Settings.get_zero(subj.tag),
                      Settings.get_pole(subj.tag), Settings.get_pole_x(subj.tag), true);
         if(i != ORDER)
             ret << " + ";
@@ -49,7 +49,7 @@ string output::get_polynom(string &key) {
 
 string output::get_formatted_output() {
     stringstream ret;
-    if(tag_to_Dpolynom.empty())
+    if(tag_to_Dpolynom.empty() || tag_to_Ppolynom.empty()})
     {
         throw POLYNOMS_ARENT_READY;
     }
@@ -69,7 +69,7 @@ string output::make_Ppolynom(data_points<data_point_with_azimuth> &subj, sub_pol
     int ORDER = Settings.ORDERS.at(subj.tag);
     for(int i = 0; i <= ORDER; i++)
     {
-        ret << polXI(i, cAnswer(ORDER + 1 + Settings.get_start(subj.tag)), Settings.get_zero(subj.tag),
+        ret << polXI(i, cAnswer(cAnswer.rows()/2 + Settings.get_start(subj.tag) + i), Settings.get_zero(subj.tag),
                      Settings.get_pole(subj.tag), Settings.get_pole_x(subj.tag), false);
         if(i != ORDER)
             ret << " + ";
@@ -77,10 +77,17 @@ string output::make_Ppolynom(data_points<data_point_with_azimuth> &subj, sub_pol
     return ret.str();
 }
 
-cd output::getP(cd z, string tag) {
-
+cd output::getD(cd z, string tag) {
+    int ORDER = Settings.ORDERS.at(tag);
+    cd ret;
+    for(int i = 0; i <= ORDER; i++)
+    {
+        ret += cAnswer(Settings.get_start(tag) + i) * powZ_POLE(z, i, Settings.get_zero(tag), Settings.get_pole(tag), Settings.get_pole_x(tag));
+        ret += cAnswer(cAnswer.rows()/2 + Settings.get_start(tag) + i) * powZ_conj_POLE(z, i, Settings.get_zero(tag), Settings.get_pole(tag), Settings.get_pole_x(tag));
+    }
+    return ret;
 }
 
-cd output::getD(cd z, string tag) {
+cd output::getP(cd z, string tag) {
 
 }
