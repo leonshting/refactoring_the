@@ -8,6 +8,7 @@
 #include <complex>
 #include <tuple>
 #include <string>
+#include <fstream>
 
 using namespace std;
 using namespace Eigen;
@@ -43,7 +44,7 @@ namespace aux_stuff
     string PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D);
     string XI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D);
 
-
+    bool is_file_empty(ifstream& pFile);
     string print_complex(cd);
 
 

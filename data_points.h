@@ -26,6 +26,22 @@ public:
     cd complex_coordinates;
 };
 
+class data_point_with_azimuth_3d : public data_point
+{
+public:
+    double Z, Azimuth, Azimuth_error;
+    data_point_with_azimuth_3d(double x, double y, double z, double azimuth, double azimuth_error);
+    data_point_with_azimuth_3d(ifstream &data_stream);
+};
+
+class data_point_with_stress_3d : public data_point_with_azimuth_3d
+{
+public:
+    double Stress;
+    data_point_with_stress_3d(double x, double y, double z, double azimuth, double azimuth_error, double stress);
+    data_point_with_stress_3d(ifstream &data_stream);
+};
+
 class data_point_with_azimuth : public data_point
 {
 public:
@@ -49,11 +65,13 @@ public:
     int equation_num;
     collocation_point(ifstream &data_stream, int en = 0);
 };
+
 template <typename T> class data_points {
 public:
     int number_of_points;
     string tag;
     data_points(string &filename, int en = 0);
+    data_points(vector<T> &D, string t = "");
     int equation_num;
     vector<T> data;
 };
@@ -75,5 +93,12 @@ data_points<T>::data_points(string &filename, int en){
 
 };
 
+template <typename T>
+data_points<T>::data_points(vector<T> &D, string t): data(D)
+{
+    number_of_points = D.size();
+    equation_num = 0;
+    tag = t;
+}
 
 #endif //STRESS_REC_REFACTORED_DATA_POINTS_H

@@ -15,8 +15,10 @@
 #include <map>
 
 #include "data_points.h"
+#include "useful.h"
 
 using namespace std;
+using namespace aux_stuff;
 
 typedef complex<double> cd;
 
@@ -24,6 +26,7 @@ class simple_data
 {
 public:
     simple_data(string& i_data);
+    simple_data(data_points<data_point_with_azimuth> & D);
     map<string, data_points<data_point_with_azimuth> > data_points_collection;
     string files_w_data;
     int num_of_zones;
@@ -34,6 +37,7 @@ public:
 class init_data:public simple_data {
 public:
     init_data(string& i_data, string& i_cpoints);
+    init_data(data_points<data_point_with_azimuth> & D);
     multimap<pair<string, string>, collocation_point> cpoints;
     multimap<string, collocation_point> key1_cpoints;
     int num_of_collocation_points;
@@ -44,6 +48,7 @@ class stress_data
 {
 public:
     stress_data(string& i_sdata);
+    stress_data(data_points<data_point_with_stress> & D);
     map<string, data_points<data_point_with_stress> > data_points_collection;
     int num_of_zones;
     int total_num_of_points;

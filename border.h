@@ -14,18 +14,27 @@
 
 using namespace std;
 
-class side
+/*class side
 {
 public:
-    side(fstream &side_stream);
-    vector<data_point> verteces;
+    side(ifstream &side_stream, ifstream &bool_stream);
+    bool is_true(double x, double y);
+private:
+    void make_equation_from_points();
+    string tag;
+    vector<double> equation;
+    vector<data_point> init_points;
+    bool greater_lower;
 };
 
-template <typename T> class border {
+class border {
 public:
     border(string filename);
-    vector<T> sides;
+    bool is_inside(double x, double y);
+private:
+    vector<side> sides;
+    vector<string> tags;
 };
 
-
+*/
 #endif //STRESS_REC_REFACTORED_BORDER_H

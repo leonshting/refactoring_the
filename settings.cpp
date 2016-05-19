@@ -12,27 +12,33 @@ settings::settings(string &filename) {
     double tmp1, tmp2;
     while(!i_some.eof())
     {
-        i_some >>keyword >> tag;
+        i_some >>keyword;
         if(keyword == "ORDER")
         {
-            i_some >> order;
+            i_some >> tag >> order;
             ORDERS.insert({tag, order});
             STARTS.insert({tag, count});
             count += order + 1;
         }
         else if(keyword == "ZERO")
         {
-            i_some >> tmp1 >> tmp2;
+            i_some >> tag >> tmp1 >> tmp2;
             zero = cd (tmp1, tmp2);
             ZEROES.insert({tag, zero});
         }
         else if(keyword == "POLE")
         {
-            i_some >> tmp1 >> tmp2;
+            i_some >> tag >> tmp1 >> tmp2;
             pole = cd (tmp1, tmp2);
             POLES.insert({tag, pole});
             POLES_X.insert({tag, true});
         }
+        else if(keyword == "SIZES")
+        {
+            i_some >> tag >> X0 >> Y0 >> X1 >> Y1;
+        }
+        else if(keyword == "LAYERS")
+            i_some >> num_of_layers;
     }
 }
 

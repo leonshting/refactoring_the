@@ -2,22 +2,30 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/output.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/data_points.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/settings.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/d3_zone.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/useful.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/settings.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/settings.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FinalPSolver.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/init_data.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/settings.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/pressures.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/border.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/output.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/useful.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/output.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/subfield_rec_solver.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FinalPSolver.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/subfield_rec_solver.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/init_data.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/pressures.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/data_points.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/layer.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FinalPSolver.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/border.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/init_data.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/subfield_rec_solver.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/d3_zone.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/layer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/init_data.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/subfield_rec_solver.cpp" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
@@ -193,8 +201,8 @@
           <root url="file:///System/Library/Frameworks/Accelerate.framework/Headers" />
           <root url="file:///System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/Headers" />
           <root url="file:///System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Headers" />
-          <root url="file:///Library/Developer/CommandLineTools/usr/lib/clang/7.0.2/include" />
           <root url="file:///Library/Developer/CommandLineTools/usr/include" />
+          <root url="file:///Library/Developer/CommandLineTools/usr/lib/clang/7.3.0/include" />
           <root url="file:///Library/Frameworks/iTunesLibrary.framework/Headers" />
           <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
@@ -370,8 +378,8 @@
           <root url="file:///System/Library/Frameworks/Accelerate.framework/Headers" />
           <root url="file:///System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/Headers" />
           <root url="file:///System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Headers" />
-          <root url="file:///Library/Developer/CommandLineTools/usr/lib/clang/7.0.2/include" />
           <root url="file:///Library/Developer/CommandLineTools/usr/include" />
+          <root url="file:///Library/Developer/CommandLineTools/usr/lib/clang/7.3.0/include" />
           <root url="file:///Library/Frameworks/iTunesLibrary.framework/Headers" />
           <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />

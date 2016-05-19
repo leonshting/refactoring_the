@@ -22,12 +22,11 @@ public:
     MatrixXd A;
     VectorXd RHS;
     VectorXd Answer;
-private:
+    void compose();
+    void solve();
     cd full_stress(cd z, double azimuth, string &key);
     double normal_stress(cd z, double azimuth, string &key);
     double shear_stress(cd z, double azimuth, string &key);
-    void compose();
-    void solve();
 };
 
 

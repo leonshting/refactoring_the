@@ -7,7 +7,7 @@
 FinalPSolver::FinalPSolver(stress_data &stressData, output &O):StressData(stressData), Output(O)
 {
     RHS.resize(stressData.total_num_of_points); RHS.setZero();
-    A.resize(2, stressData.total_num_of_points); A.setZero();
+    A.resize(stressData.total_num_of_points, 2); A.setZero();
     Answer.resize(2); Answer.setZero();
 }
 
@@ -38,6 +38,7 @@ void FinalPSolver::compose() {
             tmp(1) = 1.0;
             A.row(count) = tmp;
             RHS(count) = j->Stress;
+            count++;
         }
     }
 }

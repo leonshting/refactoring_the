@@ -24,8 +24,11 @@ public:
     void make_polynoms(sub_pol, sub_pol);
     string get_polynom(string & key);
     string get_formatted_output();
-    cd getD(cd z, string tag);
-    cd getP(cd z, string tag);
+    cd getD(cd z, string &tag);
+    cd getP(cd z, string &tag);
+    cd get_full(cd z, double azimuth, string &tag);
+    double get_normal(cd z, double azimuth, string &tag);
+    double get_shear(cd z, double azimuth, string &tag);
     Vector2d finAnswer;
     bool fin_ISREADY;
 private:

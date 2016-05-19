@@ -15,7 +15,8 @@ using namespace std;
 
 class settings {
 public:
-    int default_order;
+    int default_order, num_of_layers;
+    double X0, Y0, X1, Y1;
     settings(string &);
     settings();
     map<string, int> ORDERS;

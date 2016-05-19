@@ -10,8 +10,9 @@ output::output(VectorXd &answer, settings &S, init_data &it): Answer(answer), Se
     fin_ISREADY = false;
 }
 
+
 VectorXcd output::cAnswer_fromD(VectorXd &answer) {
-    int csize = answer.rows()/2;
+    int csize = int(answer.rows()/2);
     VectorXcd ret(csize);
     for(int i = 0 ; i < csize; i++)
        ret(i) = cd(answer(i), answer(csize+i));
@@ -31,7 +32,7 @@ void output::make_polynoms(sub_pol polPHI, sub_pol polXI) {
 
 string output::make_Dpolynom(data_points<data_point_with_azimuth> &subj, sub_pol polPHI, sub_pol polXI) {
     stringstream ret;
-    int ORDER = Settings.ORDERS.at(subj.tag);
+    int ORDER = (Settings.ORDERS.find(subj.tag)!=Settings.ORDERS.end())?Settings.ORDERS.at(subj.tag):Settings.default_order;
     for(int i = 0; i <= ORDER; i++)
     {
         ret << polPHI(i, cAnswer(Settings.get_start(subj.tag) + i), Settings.get_zero(subj.tag),
@@ -72,7 +73,7 @@ string output::get_formatted_output() {
 
 string output::make_Ppolynom(data_points<data_point_with_azimuth> &subj, sub_pol polPHI, sub_pol polXI) {
     stringstream ret;
-    int ORDER = Settings.ORDERS.at(subj.tag);
+    int ORDER = (Settings.ORDERS.find(subj.tag)!=Settings.ORDERS.end())?Settings.ORDERS.at(subj.tag):Settings.default_order;
     for(int i = 0; i <= ORDER; i++)
     {
         ret << polXI(i, cAnswer(cAnswer.rows()/2 + Settings.get_start(subj.tag) + i), Settings.get_zero(subj.tag),
@@ -83,8 +84,8 @@ string output::make_Ppolynom(data_points<data_point_with_azimuth> &subj, sub_pol
     return ret.str();
 }
 
-cd output::getD(cd z, string tag) {
-    int ORDER = Settings.ORDERS.at(tag);
+cd output::getD(cd z, string &tag) {
+    int ORDER = (Settings.ORDERS.find(tag)!=Settings.ORDERS.end())?Settings.ORDERS.at(tag):Settings.default_order;
     cd ret;
     for(int i = 0; i <= ORDER; i++)
     {
@@ -94,11 +95,37 @@ cd output::getD(cd z, string tag) {
     return ret;
 }
 
-cd output::getP(cd z, string tag) {
-    int ORDER = Settings.ORDERS.at(tag);
+cd output::getP(cd z, string &tag) {
+    int ORDER = (Settings.ORDERS.find(tag)!=Settings.ORDERS.end())?Settings.ORDERS.at(tag):Settings.default_order;
     cd ret;
     for(int i = 0; i <= ORDER; i++)
         ret += cAnswer(cAnswer.rows()/2 + Settings.get_start(tag) + i) * powZ_integrated(z, i, Settings.get_zero(tag), Settings.get_pole(tag), Settings.get_pole_x(tag));
     return ret;
 }
+
+cd output::get_full(cd z, double azimuth, string &key) {
+    cd P = getP(z, key);
+    cd D = getD(z, key);
+    return cd(2*P.real(), 0.0) + D * exp(cd(0.0, -2.0 * azimuth));
+}
+
+double output::get_normal(cd z, double azimuth, string &tag) {
+    return get_full(z, azimuth, tag).real();
+}
+
+double output::get_shear(cd z, double azimuth, string &tag) {
+    return get_full(z, azimuth, tag).imag();
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

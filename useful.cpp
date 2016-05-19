@@ -95,3 +95,7 @@ string aux_stuff::PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool p
         return PHI_SUB_ZERO(ORDER, coef, zero, pole, pole_x, D);
 }
 
+bool aux_stuff::is_file_empty(ifstream& pFile)
+{
+    return pFile.peek() == std::ifstream::traits_type::eof();
+}
