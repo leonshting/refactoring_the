@@ -49,4 +49,12 @@ void rect_layer::init_full_solver() {
 }
 
 
+void rect_layer::get_best() {
+    for(int i = 0; i < Sets.upper_order; i++)
+    {
+        for(j = 0; j < Sets.num_of_validations; j++)
+        {
 
+        }
+    }
+}

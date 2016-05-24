@@ -10,6 +10,12 @@ output::output(VectorXd &answer, settings &S, init_data &it): Answer(answer), Se
     fin_ISREADY = false;
 }
 
+output::output(VectorXd &answer, settings &S, init_data &it, init_data &pt):Answer(answer), Settings(S), initData(it) {
+    cAnswer = cAnswer_fromD(Answer);
+    fin_ISREADY = false;
+    partData = new init_data(pt);
+}
+
 
 VectorXcd output::cAnswer_fromD(VectorXd &answer) {
     int csize = int(answer.rows()/2);
@@ -118,14 +124,31 @@ double output::get_shear(cd z, double azimuth, string &tag) {
 }
 
 
+double output::get_disrepancy_over_principals() {
+    if(tag_to_Dpolynom.empty() || tag_to_Ppolynom.empty())
+    {
+        map<string, data_points<data_point_with_azimuth>>::iterator i;
+        vector<data_point_with_azimuth>::iterator j;
+        double disrepancy = 0.0;
+        for(i = initData.data_points_collection.begin(); i != initData.data_points_collection.end(); ++i)
+        {
+            for(j = (*i).second.data.begin(); j != (*i).second.data.end(); ++j)
+            {
+                cd D = getD((*j).complex_coordinates, (*i).second.tag);
+                double azimuth = arg(D);
+                disrepancy += abs(fromPI_to_PI(azimuth + fromPI_to_PI(2 * (*j).Azimuth)));
+            }
+        }
+        return disrepancy/initData.total_num_of_points;
+    }
+    else
+        throw(POLYNOMS_ARENT_READY);
+}
 
 
-
-
-
-
-
-
-
+void output::update_part_data(init_data &pD) {
+    delete partData;
+    partData = new init_data(pD);
+}
 
 

@@ -21,7 +21,9 @@ class output
 {
 public:
     output(VectorXd &answer, settings &S, init_data &it);
+    output(VectorXd &answer, settings &S, init_data &it, init_data &pt);
     void make_polynoms(sub_pol, sub_pol);
+    void update_part_data(init_data &pD);
     string get_polynom(string & key);
     string get_formatted_output();
     cd getD(cd z, string &tag);
@@ -29,6 +31,7 @@ public:
     cd get_full(cd z, double azimuth, string &tag);
     double get_normal(cd z, double azimuth, string &tag);
     double get_shear(cd z, double azimuth, string &tag);
+    double get_disrepancy_over_principals();
     Vector2d finAnswer;
     bool fin_ISREADY;
 private:
@@ -36,6 +39,7 @@ private:
     VectorXcd cAnswer;
     settings Settings;
     init_data initData;
+    init_data *partData;
     VectorXcd cAnswer_fromD(VectorXd &answer);
     map<string, string> tag_to_Dpolynom;
     map<string, string> tag_to_Ppolynom;

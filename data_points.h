@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <random>
 
 #include "useful.h"
 
@@ -72,6 +73,7 @@ public:
     string tag;
     data_points(string &filename, int en = 0);
     data_points(vector<T> &D, string t = "");
+    data_points<T> get_randomized_part(double per);
     int equation_num;
     vector<T> data;
 };
@@ -96,9 +98,29 @@ data_points<T>::data_points(string &filename, int en){
 template <typename T>
 data_points<T>::data_points(vector<T> &D, string t): data(D)
 {
-    number_of_points = D.size();
+    number_of_points = int(D.size());
     equation_num = 0;
     tag = t;
+};
+
+template <typename T>
+data_points<T> data_points<T>::get_randomized_part(double per)
+{
+    vector<T>::iterator i;
+    vector<T> to_ret;
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> dis(0.0, 1.0);
+    for(i = data.begin(); i != data.end(); ++i)
+    {
+        double chance = dis(gen);
+        if(chance >= per)
+        {
+            to_ret.push_back((*i));
+        }
+    }
+    return data_points<T>(to_ret, to_string(dis(gen)));
+
 }
 
 #endif //STRESS_REC_REFACTORED_DATA_POINTS_H

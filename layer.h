@@ -29,6 +29,8 @@ public:
     output * out;
     void init_solver();
     void init_full_solver();
+    void get_best();
+private:
 
 };
 /*

@@ -15,7 +15,7 @@ using namespace std;
 
 class settings {
 public:
-    int default_order, num_of_layers;
+    int default_order, num_of_layers, upper_order, num_of_validations;
     double X0, Y0, X1, Y1;
     settings(string &);
     settings();
@@ -29,6 +29,7 @@ public:
     cd get_zero(string &key);
     cd get_pole(string &key);
     bool get_pole_x(string &key);
+    void reset_default_order(int ORDER);
 };
 
 

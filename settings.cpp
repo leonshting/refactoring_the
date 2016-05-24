@@ -39,6 +39,10 @@ settings::settings(string &filename) {
         }
         else if(keyword == "LAYERS")
             i_some >> num_of_layers;
+        else if(keyword == "UPPERORDER")
+            i_some >> upper_order;
+        else if(keyword == "VALIDATIONS")
+            i_some >> num_of_validations;
     }
 }
 
@@ -84,4 +88,8 @@ bool settings::get_pole_x(string &key) {
         return false;
     else
         return search->second;
+}
+
+void settings::reset_default_order(int Order) {
+    default_order = Order;
 }

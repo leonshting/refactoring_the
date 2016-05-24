@@ -4,6 +4,9 @@
 
 #include "useful.h"
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <iostream>
 
 complex<double> aux_stuff::powZ(cd z, int n, cd zero, cd pole, bool pole_x) {
@@ -98,4 +101,10 @@ string aux_stuff::PHI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool p
 bool aux_stuff::is_file_empty(ifstream& pFile)
 {
     return pFile.peek() == std::ifstream::traits_type::eof();
+}
+
+double ::aux_stuff::fromPI_to_PI(double angle) {
+    double tmp = angle/(2*M_PI);
+    double remain = std::remainder(tmp, 1);
+    return remain*2*M_PI;
 }

@@ -45,6 +45,7 @@ namespace aux_stuff
     string XI_SUB_ZERO_POLE(int ORDER, cd coef, cd zero, cd pole, bool pole_x, bool D);
 
     bool is_file_empty(ifstream& pFile);
+    double fromPI_to_PI(double angle);
     string print_complex(cd);
 
 
