@@ -28,6 +28,7 @@ public:
     settings Sets;
     output * out;
     void init_solver();
+    void init_solver(data_points<data_point_with_azimuth> &data);
     void init_full_solver();
     void get_best();
 private:

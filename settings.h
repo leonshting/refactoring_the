@@ -17,6 +17,7 @@ class settings {
 public:
     int default_order, num_of_layers, upper_order, num_of_validations;
     double X0, Y0, X1, Y1;
+    double default_zero_X, default_zero_Y;
     settings(string &);
     settings();
     map<string, int> ORDERS;

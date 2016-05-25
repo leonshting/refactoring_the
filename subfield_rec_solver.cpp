@@ -172,7 +172,7 @@ MatrixXcd SRSolver::Dsrep_complete(calc f) {
 
 void SRSolver::build_matrices() {
     values = 0;
-    ABlock = Vandermonde_complete(powZ_POLE);
+    ABlock = Vandermonde_complete(powZ);
     CBlock = C_complete();
     AcBlock = Ac_complete();
     AResult = -CBlock * AcBlock.inverse() * ABlock;
@@ -189,6 +189,10 @@ void SRSolver::build_matrices() {
 }
 
 void SRSolver::update_norm(VectorXcd &to_add, int eq_num) {
+    if(norm.find(eq_num)!=norm.end())
+    {
+        norm.erase(eq_num);
+    }
     norm.insert({eq_num, to_add});
 }
 
@@ -211,7 +215,7 @@ VectorXd SRSolver::construct_RHS() {
     int size = initData.num_of_collocation_points * 8 + initData.total_num_of_points + initData.num_of_zones;
     VectorXd ret(size);
     ret.setZero();
-    int tmp_start = ret.rows() - initData.num_of_zones;
+    int tmp_start = int(ret.rows()) - initData.num_of_zones;
     map<string, data_points<data_point_with_azimuth> >::iterator i;
     for(i = initData.data_points_collection.begin(); i != initData.data_points_collection.end(); ++i)
         ret(tmp_start + i->second.equation_num) = i->second.number_of_points;
@@ -224,6 +228,7 @@ void SRSolver::LSM_solve() {
     MatrixXd mts(0,0), tmp(0,0);
     tmp = catMat(dAResult, dDSR_block, CAT::Bottom);
     mts = catMat(tmp, dEQU_part, CAT::Bottom);
+    //cout << mts << endl;
     JacobiSVD<MatrixXd> svd(mts, ComputeThinU | ComputeThinV);
     dCoef = svd.solve(RHS);
 }

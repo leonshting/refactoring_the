@@ -125,7 +125,7 @@ double output::get_shear(cd z, double azimuth, string &tag) {
 
 
 double output::get_disrepancy_over_principals() {
-    if(tag_to_Dpolynom.empty() || tag_to_Ppolynom.empty())
+    if(!tag_to_Dpolynom.empty() && !tag_to_Ppolynom.empty())
     {
         map<string, data_points<data_point_with_azimuth>>::iterator i;
         vector<data_point_with_azimuth>::iterator j;
@@ -135,11 +135,12 @@ double output::get_disrepancy_over_principals() {
             for(j = (*i).second.data.begin(); j != (*i).second.data.end(); ++j)
             {
                 cd D = getD((*j).complex_coordinates, (*i).second.tag);
-                double azimuth = arg(D);
-                disrepancy += abs(fromPI_to_PI(azimuth + fromPI_to_PI(2 * (*j).Azimuth)));
+                double azimuth = -arg(D);
+                double tmp = abs(fromPI_to_PI(azimuth + fromPI_to_PI(2 * (*j).Azimuth)));
+                disrepancy += tmp;
             }
         }
-        return disrepancy/initData.total_num_of_points;
+        return disrepancy/initData.total_num_of_points/2;
     }
     else
         throw(POLYNOMS_ARENT_READY);

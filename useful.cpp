@@ -104,7 +104,7 @@ bool aux_stuff::is_file_empty(ifstream& pFile)
 }
 
 double ::aux_stuff::fromPI_to_PI(double angle) {
-    double tmp = angle/(2*M_PI);
+    double tmp = angle/(M_PI);
     double remain = std::remainder(tmp, 1);
-    return remain*2*M_PI;
+    return remain*(M_PI);
 }

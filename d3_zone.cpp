@@ -76,8 +76,8 @@ void d3_zone::cut_to_layers()
                 tmp2.push_back(data_point_with_stress((*k).X, (*k).Y, (*k).Azimuth, (*k).Azimuth_error, (*k).Stress));
             }
         }
-        data_points<data_point_with_azimuth> DP(tmp, to_string(i));
-        data_points<data_point_with_stress> DP2(tmp2, to_string(i));
+        data_points<data_point_with_azimuth> DP(tmp, Data.tag);
+        data_points<data_point_with_stress> DP2(tmp2, Data.tag);
         old = j;
         old2 = k;
         layers.push_back(rect_layer(DP, DP2, Sets, upper_z, lower_z));
@@ -88,7 +88,7 @@ void d3_zone::layer_exec() {
     vector<rect_layer>::iterator i;
     for(i = layers.begin(); i != layers.end(); ++i)
     {
-        (*i).init_solver();
+        (*i).get_best();
         (*i).init_full_solver();
     }
 }

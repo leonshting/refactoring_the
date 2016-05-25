@@ -9,6 +9,7 @@
 #include "FinalPSolver.h"
 
 #include <fstream>
+#include <limits>
 /*
 layer::layer(string borders) {
     ifstream b(borders);
@@ -36,7 +37,7 @@ void rect_layer::init_solver() {
     solver.build_matrices();
     solver.LSM_solve();
     out = new output(solver.dCoef, Sets, tmp_data);
-    out->make_polynoms(PHI_SUB_ZERO_POLE, XI_SUB_ZERO_POLE);
+    out->make_polynoms(PHI_SUB_ZERO, XI_SUB_ZERO);
 }
 
 void rect_layer::init_full_solver() {
@@ -50,11 +51,53 @@ void rect_layer::init_full_solver() {
 
 
 void rect_layer::get_best() {
-    for(int i = 0; i < Sets.upper_order; i++)
+    int best_O = Sets.default_order;
+    init_solver();
+    double maxn = std::numeric_limits<double>::max();
+    double min_disrepancy = maxn;
+    for(int i = 1; i < Sets.upper_order; i++)
     {
-        for(j = 0; j < Sets.num_of_validations; j++)
+        double avg_disrepancy = 0.0;
+        for(int j = 0; j < Sets.num_of_validations; j++)
         {
-
+            Sets.reset_default_order(i);
+            auto tmp_data = Data.get_randomized_part(0.6);
+            init_solver(tmp_data);
+            avg_disrepancy += out->get_disrepancy_over_principals();
+        }
+        if(avg_disrepancy/Sets.num_of_validations < min_disrepancy)
+        {
+            best_O = i;
+            min_disrepancy = avg_disrepancy/Sets.num_of_validations;
         }
     }
+    Sets.reset_default_order(best_O);
+    for(int i = 1; i < 10; i++)
+    {
+        output old(*out);
+        auto tmp_data = Data.get_randomized_part(double(i)/10.0);
+        for(int j = 0; j < Sets.num_of_validations; j++)
+        {
+            init_solver(tmp_data);
+            if(out->get_disrepancy_over_principals() > old.get_disrepancy_over_principals())
+            {
+                delete out;
+                out = new output(old);
+            }
+        }
+    }
+
 }
+
+void rect_layer::init_solver(data_points<data_point_with_azimuth> &data) {
+    init_data tmp_data(data);
+    init_data to_fill(Data);
+    SRSolver solver(tmp_data, Sets);
+    solver.build_matrices();
+    solver.LSM_solve();
+    delete out;
+    out = new output(solver.dCoef, Sets, to_fill, tmp_data);
+    out->make_polynoms(PHI_SUB_ZERO, XI_SUB_ZERO);
+}
+
+

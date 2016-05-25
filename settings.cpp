@@ -6,7 +6,8 @@
 
 
 settings::settings(string &filename) {
-    default_order = 3; int count = 0;
+    default_order = 3; int count = 0; num_of_validations = 5;
+    upper_order = 10;
     ifstream i_some(filename);
     string keyword, tag; int order; cd zero, pole;
     double tmp1, tmp2;
@@ -36,6 +37,8 @@ settings::settings(string &filename) {
         else if(keyword == "SIZES")
         {
             i_some >> tag >> X0 >> Y0 >> X1 >> Y1;
+            default_zero_X = (X1-X0)/2.0;
+            default_zero_Y = (Y1-Y0)/2.0;
         }
         else if(keyword == "LAYERS")
             i_some >> num_of_layers;
@@ -43,6 +46,7 @@ settings::settings(string &filename) {
             i_some >> upper_order;
         else if(keyword == "VALIDATIONS")
             i_some >> num_of_validations;
+
     }
 }
 
@@ -77,7 +81,7 @@ cd settings::get_pole(string &key) {
 cd settings::get_zero(string &key) {
     auto search = ZEROES.find(key);
     if(search == ZEROES.end())
-        return BLANK_CD;
+        return cd(default_zero_X, default_zero_Y);
     else
         return search->second;
 }
@@ -87,7 +91,7 @@ bool settings::get_pole_x(string &key) {
     if(search == POLES_X.end())
         return false;
     else
-        return search->second;
+        return true;
 }
 
 void settings::reset_default_order(int Order) {

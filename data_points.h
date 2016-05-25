@@ -106,21 +106,20 @@ data_points<T>::data_points(vector<T> &D, string t): data(D)
 template <typename T>
 data_points<T> data_points<T>::get_randomized_part(double per)
 {
-    vector<T>::iterator i;
     vector<T> to_ret;
     random_device rd;
     mt19937 gen(rd());
     uniform_real_distribution<> dis(0.0, 1.0);
-    for(i = data.begin(); i != data.end(); ++i)
+    for(auto i = data.begin(); i != data.end(); ++i)
     {
         double chance = dis(gen);
-        if(chance >= per)
+        if(chance >= (1-per))
         {
             to_ret.push_back((*i));
         }
     }
-    return data_points<T>(to_ret, to_string(dis(gen)));
+    return data_points<T>(to_ret, tag);
 
-}
+};
 
 #endif //STRESS_REC_REFACTORED_DATA_POINTS_H
