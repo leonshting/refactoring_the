@@ -18,6 +18,7 @@ public:
     int default_order, num_of_layers, upper_order, num_of_validations;
     double X0, Y0, X1, Y1;
     double default_zero_X, default_zero_Y;
+    bool sizes_set;
     settings(string &);
     settings();
     map<string, int> ORDERS;
@@ -31,6 +32,7 @@ public:
     cd get_pole(string &key);
     bool get_pole_x(string &key);
     void reset_default_order(int ORDER);
+    void set_sizes(double x0, double x1, double y0, double y1);
 };
 
 

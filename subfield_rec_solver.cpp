@@ -129,7 +129,7 @@ MatrixXcd SRSolver::Vandermonde_complete(calc f) {
 
 VectorXcd SRSolver::Dsrep(calc f, data_point_with_azimuth z, int ORDER) {
     VectorXcd dsrep(ORDER + 1);
-    dsrep = Vandermonde(f, z.complex_coordinates, ORDER) * exp(cd(0,-2*z.Azimuth));
+    dsrep = Vandermonde(f, z.complex_coordinates, ORDER) * exp(cd(0,2*z.Azimuth));
     return dsrep;
 }
 

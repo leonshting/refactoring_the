@@ -135,7 +135,7 @@ double output::get_disrepancy_over_principals() {
             for(j = (*i).second.data.begin(); j != (*i).second.data.end(); ++j)
             {
                 cd D = getD((*j).complex_coordinates, (*i).second.tag);
-                double azimuth = -arg(D);
+                double azimuth = arg(D);
                 double tmp = abs(fromPI_to_PI(azimuth + fromPI_to_PI(2 * (*j).Azimuth)));
                 disrepancy += tmp;
             }

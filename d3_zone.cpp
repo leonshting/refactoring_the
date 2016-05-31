@@ -34,9 +34,18 @@ void d3_zone::get_max_min() {
         else if((*i).Z < min[2])
             min[2] = (*i).Z;
     }
-    X0 = Sets.X0; Y0 = Sets.Y0; Z0 = min[2];
-    X1 = Sets.X1; Y1 = Sets.Y1; Z1 = max[2];
+    X0 = min[0]; Y0 = min[1]; Z0 = min[2];
+    X1 = max[0]; Y1 = max[1]; Z1 = max[2];
     dX = X1-X0; dY = Y1-Y0; dZ = Z1-Z0;
+    if(!Sets.sizes_set)
+    {
+        Sets.set_sizes(X0, X1, Y0, Y1);
+    }
+    else
+    {
+        X0 = Sets.X0; X1 = Sets.X1;
+        Y0 = Sets.Y0; Y1 = Sets.Y1;
+    }
 }
 
 bool compare_by_Z(data_point_with_azimuth_3d &first, data_point_with_azimuth_3d &second)

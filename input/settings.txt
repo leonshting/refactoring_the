@@ -2,5 +2,4 @@ ORDER data1 5
 ORDER data2 3
 ZERO data1 2.0 0.0
 ZERO data2 2.0 0.0
-SIZES data1 0 0 1 1
 LAYERS 1
