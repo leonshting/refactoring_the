@@ -38,6 +38,8 @@ public:
     int num_of_layers;
     pressures *p;
     void layer_exec();
+    void rerun_stress();
+    void update_stresses(data_points<data_point_with_stress_3d> &some);
     double get_planar(double x, double y, double z, double Azimuth);
 private:
     void get_max_min();

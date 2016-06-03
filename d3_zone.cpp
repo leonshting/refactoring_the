@@ -130,6 +130,20 @@ double d3_zone::get_planar(double x, double y, double z, double Azimuth) {
     }
 }
 
+void d3_zone::update_stresses(data_points<data_point_with_stress_3d> &some) {
+    Stress = some;
+    cut_to_layers();
+    rerun_stress();
+}
+
+void d3_zone::rerun_stress() {
+    vector<rect_layer>::iterator i;
+    for(i = layers.begin(); i != layers.end(); ++i)
+    {
+        (*i).init_full_solver();
+    }
+}
+
 
 bool compare_by_Z_stress(data_point_with_stress_3d &first, data_point_with_stress_3d &second) {
     return (first.Z < second.Z);

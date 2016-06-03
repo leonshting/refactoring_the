@@ -52,7 +52,8 @@ settings::settings(string &filename) {
 }
 
 settings::settings() {
-    default_order = 3;
+    default_order = 3;int count = 0; num_of_validations = 5;
+    upper_order = 10; sizes_set = false;
 }
 
 int settings::get_order(string &key) {
