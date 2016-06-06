@@ -11,8 +11,8 @@
 #include <string>
 using namespace std;
 
-MODULE_API static d3_zone * letssaveit;
-MODULE_API static string letsaveittoo;
+static d3_zone * letssaveit;
+static string letsaveittoo;
 
 
 MODULE_API void load_initial(char *orientations, char *stresses) {
@@ -25,7 +25,7 @@ MODULE_API void load_initial(char *orientations, char *stresses) {
     letssaveit = new d3_zone(d3Zone);
 }
 
-MODULE_API double doubleget_stress(double x, double y, double z, double azimuth) {
+MODULE_API double get_stress(double x, double y, double z, double azimuth) {
     return letssaveit->get_planar(x,y,z,azimuth);
 }
 

@@ -53,7 +53,7 @@ settings::settings(string &filename) {
 
 settings::settings() {
     default_order = 3;int count = 0; num_of_validations = 5;
-    upper_order = 10; sizes_set = false;
+    upper_order = 10; sizes_set = false; num_of_layers = 2;
 }
 
 int settings::get_order(string &key) {
