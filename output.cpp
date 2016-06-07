@@ -153,4 +153,12 @@ void output::update_part_data(init_data &pD) {
     partData = new init_data(pD);
 }
 
+double output::get_orientation(cd z, string &tag) {
+    cd D = getD(z, tag);
+    return fromPI_to_PI(arg(D))/2;
+}
+
+
+
+
 

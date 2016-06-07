@@ -32,6 +32,7 @@ public:
     double get_normal(cd z, double azimuth, string &tag);
     double get_shear(cd z, double azimuth, string &tag);
     double get_disrepancy_over_principals();
+    double get_orientation(cd z, string &tag);
     Vector2d finAnswer;
     bool fin_ISREADY;
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

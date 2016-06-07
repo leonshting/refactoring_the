@@ -26,7 +26,9 @@ MODULE_API void load_initial(char *orientations, char *stresses) {
 
 MODULE_API void load_pressures(char * upper_pressures, char * densities)
 {
-    letssaveit->init_pressures(upper_pressures, densities);
+    string UW(upper_pressures);
+    string Dens(densities);
+    letssaveit->init_pressures(UW, Dens);
     letssaveit->cut_to_layers();
 }
 
@@ -39,10 +41,19 @@ MODULE_API double get_stress(double x, double y, double z, double azimuth) {
     return letssaveit->get_planar(x,y,z,azimuth);
 }
 
-MODULE_API int get_crack_stress(double x, double y, double z, Stensor *ret) {
-    ret->xx = 1.0;
-    ret->yy = 0.0;
-    ret->zz = 1.1;
+MODULE_API int get_crack_stress(double x, double y, double z, double planar_angle, Stensor *ret) {
+    Stensor diag;
+    double xx_az = letssaveit->get_orientation(x,y,z);
+    diag.xx = letssaveit -> get_planar(x,y,z,xx_az);
+    diag.yy = letssaveit -> get_planar(x,y,z,xx_az + M_PI_2);
+    diag.zz = letssaveit -> p->get_pressure(x,y,z);
+    //rotating tensors :)
+    ret->xx = diag.xx * pow(sin(planar_angle),2) + diag.yy * pow(cos(planar_angle),2);
+    ret->yy = diag.xx * pow(cos(planar_angle),2) + diag.yy * pow(sin(planar_angle),2);
+    ret->zz = letssaveit->p->get_pressure(x,y,z);
+    ret->xz = 0.0;
+    ret->yz = 0.0;
+    ret->xy = abs((diag.xx-diag.yy) * sin(2*planar_angle)/2);
     return 1;
 }
 

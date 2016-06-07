@@ -210,6 +210,11 @@ void d3_zone::incr_layer() {
     layer_counter+=1;
 }
 
+double d3_zone::get_orientation(double x, double y, double z) {
+    int numz = get_layer_num(x, y, z);
+    return layers[numz].out->get_orientation(cd(x,y), layers[numz].Data.tag);
+}
+
 
 bool compare_by_Z_stress(data_point_with_stress_3d &first, data_point_with_stress_3d &second) {
     return (first.Z < second.Z);
