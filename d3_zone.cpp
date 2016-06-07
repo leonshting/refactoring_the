@@ -128,6 +128,10 @@ int d3_zone::get_layer_num(double x, double y, double z) {
             return j;
         j++;
     }
+    if(layers[0].Z0 > z)
+        return 0;
+    else if(layers[num_of_layers-1].Z1 < z)
+        return num_of_layers - 1;
     return  -1;
 }
 

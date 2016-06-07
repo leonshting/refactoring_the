@@ -8,6 +8,7 @@
 #include <cmath>
 
 #include <iostream>
+#include <string>
 
 complex<double> aux_stuff::powZ(cd z, int n, cd zero, cd pole, bool pole_x) {
     return pow(z - zero,n);

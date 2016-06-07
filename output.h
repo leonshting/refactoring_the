@@ -34,6 +34,7 @@ public:
     double get_disrepancy_over_principals();
     Vector2d finAnswer;
     bool fin_ISREADY;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 private:
     VectorXd Answer;
     VectorXcd cAnswer;
