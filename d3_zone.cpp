@@ -9,7 +9,8 @@ d3_zone::d3_zone(string &input, string &stress, settings & S):Sets(S), Data(inpu
     get_max_min();
     sort(Data.data.begin(), Data.data.end(), compare_by_Z);
     sort(Stress.data.begin(), Stress.data.end(), compare_by_Z_stress);
-    cut_to_layers();
+    layer_counter = 0;
+    p = nullptr;
 
 }
 
@@ -46,6 +47,15 @@ void d3_zone::get_max_min() {
         X0 = Sets.X0; X1 = Sets.X1;
         Y0 = Sets.Y0; Y1 = Sets.Y1;
     }
+    if(!Sets.Z_set)
+    {
+        Sets.set_Z(Z0, Z1);
+    }
+    else
+    {
+        Z0 = Sets.Z0;
+        Z1 = Sets.Z1;
+    }
 }
 
 bool compare_by_Z(data_point_with_azimuth_3d &first, data_point_with_azimuth_3d &second)
@@ -57,14 +67,17 @@ void d3_zone::cut_to_layers()
 {
     int num = Data.number_of_points;
 
+    if(Sets.static_division && p == nullptr)
+        throw("Pressures are not initialized");
     vector<data_point_with_azimuth_3d>::iterator old = Data.data.begin();
     vector<data_point_with_stress_3d>::iterator old2 = Stress.data.begin();
-    for(int i = 0; i< num_of_layers; i++)
+    double upper_z, lower_z;
+    while((upper_z = get_next_upper()) != std::numeric_limits<double>::max())
     {
+
+        lower_z = get_next_lower();
         vector<data_point_with_azimuth> tmp;
         vector<data_point_with_stress> tmp2;
-        double upper_z = Z0 + (Z1 - Z0)/num_of_layers * (i);
-        double lower_z = Z0 + (Z1 - Z0)/num_of_layers * (i+1);
         vector<data_point_with_azimuth_3d>::iterator j;
         vector<data_point_with_stress_3d>::iterator k;
         for(j = old; j != Data.data.end(); ++j)
@@ -90,10 +103,14 @@ void d3_zone::cut_to_layers()
         old = j;
         old2 = k;
         layers.push_back(rect_layer(DP, DP2, Sets, upper_z, lower_z));
+        incr_layer();
     }
+    layer_counter = 0;
 }
 
 void d3_zone::layer_exec() {
+    if(layers.empty())
+        throw("Layers haven't been initialized");
     vector<rect_layer>::iterator i;
     for(i = layers.begin(); i != layers.end(); ++i)
     {
@@ -116,6 +133,9 @@ int d3_zone::get_layer_num(double x, double y, double z) {
 
 void d3_zone::init_pressures(string &upper_weigths, string &densities) {
     p = new pressures(upper_weigths, densities, Sets);
+    auto tup = p->get_Zsizes();
+    Sets.set_Z(get<0>(tup), get<1>(tup));
+    Z0 = Sets.Z0; Z1 = Sets.Z1;
 }
 
 double d3_zone::get_planar(double x, double y, double z, double Azimuth) {
@@ -142,6 +162,48 @@ void d3_zone::rerun_stress() {
     {
         (*i).init_full_solver();
     }
+}
+
+int d3_zone::get_num_of_layers() {
+    return (Sets.static_division)?int(p->Densities.size()):num_of_layers;
+}
+
+double d3_zone::get_next_upper() {
+    if(Sets.static_division)
+    {
+        if(layer_counter < int(p->Densities.size()))
+            return p->Densities[layer_counter].Z0;
+        else
+            return std::numeric_limits<double>::max();
+    }
+    else
+    {
+        if(layer_counter < num_of_layers)
+            return Z0 + (Z1 - Z0)/num_of_layers * (layer_counter);
+        else
+            return std::numeric_limits<double>::max();
+    }
+}
+
+double d3_zone::get_next_lower() {
+    if (Sets.static_division)
+    {
+        if(layer_counter < int(p->Densities.size()))
+            return p->Densities[layer_counter].Z1;
+        else
+            return std::numeric_limits<double>::max();
+    }
+    else
+    {
+        if(layer_counter < num_of_layers)
+            return Z0 + (Z1 - Z0)/num_of_layers * (layer_counter+1);
+        else
+            return std::numeric_limits<double>::max();
+    }
+}
+
+void d3_zone::incr_layer() {
+    layer_counter+=1;
 }
 
 

@@ -21,11 +21,21 @@ MODULE_API void load_initial(char *orientations, char *stresses) {
     string stress_data(stresses);
     settings Settings;
     d3_zone d3Zone(azimuth_data, stress_data, Settings);
-    d3Zone.layer_exec();
     letssaveit = new d3_zone(d3Zone);
 }
 
-MODULE_API double doubleget_stress(double x, double y, double z, double azimuth) {
+MODULE_API void load_pressures(char * upper_pressures, char * densities)
+{
+    letssaveit->init_pressures(upper_pressures, densities);
+    letssaveit->cut_to_layers();
+}
+
+MODULE_API void exec_initial()
+{
+    letssaveit->layer_exec();
+}
+
+MODULE_API double get_stress(double x, double y, double z, double azimuth) {
     return letssaveit->get_planar(x,y,z,azimuth);
 }
 

@@ -29,6 +29,10 @@ MODULE_API typedef struct Stensor
 
 
 MODULE_API void load_initial(char * orientations, char * stresses);
+MODULE_API void load_pressures(char * upper_pressures, char * densitites);
+
+MODULE_API void exec_initial();
+
 MODULE_API double get_stress(double x, double y, double z, double azimuth);
 MODULE_API void init_crack(double *x, double *y, double *z, double *azimuths, double *pressures);
 MODULE_API int get_crack_stress(double x, double y, double z, Stensor * ret);

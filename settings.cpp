@@ -7,7 +7,8 @@
 
 settings::settings(string &filename) {
     default_order = 3; int count = 0; num_of_validations = 5;
-    upper_order = 10; sizes_set = false;
+    upper_order = 10; sizes_set = false; n_pressure_steps = 1000; Z_set = false;
+    define_z_by_densities = false; static_division = false;
     ifstream i_some(filename);
     string keyword, tag; int order; cd zero, pole;
     double tmp1, tmp2;
@@ -47,13 +48,31 @@ settings::settings(string &filename) {
             i_some >> upper_order;
         else if(keyword == "VALIDATIONS")
             i_some >> num_of_validations;
-
+        else if(keyword == "Z_SIZES")
+        {
+            Z_set = true;
+            i_some >> Z0 >> Z1;
+        }
+        else if(keyword == "STATIC_DIVISION")
+        {
+            string tmp;
+            i_some >> tmp;
+            if(tmp == "TRUE")
+            {
+                static_division = true;
+            }
+            else if(tmp == "FALSE")
+            {
+                static_division = false;
+            }
+        }
     }
 }
 
 settings::settings() {
     default_order = 3;int count = 0; num_of_validations = 5;
-    upper_order = 10; sizes_set = false;
+    upper_order = 10; sizes_set = false; n_pressure_steps = 1000;
+    Z_set = false; define_z_by_densities = false; static_division = false;
 }
 
 int settings::get_order(string &key) {
@@ -106,5 +125,12 @@ void settings::set_sizes(double x0, double x1, double y0, double y1) {
     default_zero_Y = (Y1+Y0)/2.0;
     sizes_set = true;
 }
+
+void settings::set_Z(double z0, double z1) {
+    Z0 = z0; Z1 = z1;
+    Z_set = true;
+}
+
+
 
 

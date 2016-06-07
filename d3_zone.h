@@ -41,11 +41,17 @@ public:
     void rerun_stress();
     void update_stresses(data_points<data_point_with_stress_3d> &some);
     double get_planar(double x, double y, double z, double Azimuth);
+    int get_num_of_layers();
+    double get_next_upper();
+    double get_next_lower();
+    void incr_layer();
+    void cut_to_layers();
 private:
     void get_max_min();
-    void cut_to_layers();
     int get_layer_num(double x, double y, double z);
 
+protected:
+    int layer_counter;
 };
 
 

@@ -29,6 +29,7 @@ rect_layer::rect_layer(data_points<data_point_with_azimuth> &D, data_points<data
     Y0 = Sets.Y0; Y1 = Sets.Y1;
     Z0 = z0; Z1 = z1;
     num_of_points = (int) D.data.size();
+    out = nullptr;
 }
 
 void rect_layer::init_solver() {

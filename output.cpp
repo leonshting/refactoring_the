@@ -8,6 +8,7 @@ output::output(VectorXd &answer, settings &S, init_data &it): Answer(answer), Se
 {
     cAnswer = cAnswer_fromD(Answer);
     fin_ISREADY = false;
+    partData = nullptr;
 }
 
 output::output(VectorXd &answer, settings &S, init_data &it, init_data &pt):Answer(answer), Settings(S), initData(it) {
@@ -116,11 +117,11 @@ cd output::get_full(cd z, double azimuth, string &key) {
 }
 
 double output::get_normal(cd z, double azimuth, string &tag) {
-    return get_full(z, azimuth, tag).real();
+    return finAnswer(0) * get_full(z, azimuth, tag).real() + finAnswer(1);
 }
 
 double output::get_shear(cd z, double azimuth, string &tag) {
-    return get_full(z, azimuth, tag).imag();
+    return finAnswer(0) * get_full(z, azimuth, tag).imag();
 }
 
 
