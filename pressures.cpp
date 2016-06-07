@@ -14,6 +14,7 @@ double pressures::get_density(double x, double y, double z) {
         if((*i).is_inside(z))
             return (*i).Density;
     }
+    return 0.0;
 }
 
 pressures::pressures(string & upper_weights, string & densities, settings & sets) : Sets(sets) {
@@ -66,7 +67,7 @@ tuple<double, double> pressures::get_Zsizes() {
         if((*i).Z1 > max)
             max = (*i).Z1;
     }
-    return {min, max};
+    return make_tuple(min, max);
 }
 
 

@@ -22,19 +22,20 @@ extern "C" {
 #  define MODULE_API
 #endif
 
-MODULE_API typedef struct Stensor
+struct Stensor
         {
                 double xx; double yy; double zz; double xy; double xz; double yz;
         };
 
-// three functions must be executed in before usng non-void functions
+// three functions must be executed in before using non-void functions
 MODULE_API void load_initial(char * orientations, char * stresses);
 MODULE_API void load_pressures(char * upper_pressures, char * densitites);
 
 MODULE_API void exec_initial();
-// /\ /\
-// || || these three functions
-
+//  /\   /\
+// /++\ /++\
+// |||  ||| these three functions
+// |||  ||| in the following order load_initial(), load_pressures(), exec_initial()
 
 MODULE_API double get_stress(double x, double y, double z, double azimuth);
 

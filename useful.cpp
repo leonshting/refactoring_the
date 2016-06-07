@@ -4,8 +4,14 @@
 
 #include "useful.h"
 
+
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#include <math.h>
+#else
 #define _USE_MATH_DEFINES
 #include <cmath>
+#endif
 
 #include <iostream>
 #include <string>

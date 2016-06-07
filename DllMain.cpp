@@ -9,10 +9,19 @@
 
 #include <vector>
 #include <string>
+
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#include <math.h>
+#else
+#define _USE_MATH_DEFINES
+#include <cmath>
+#endif
+
 using namespace std;
 
-MODULE_API static d3_zone * letssaveit;
-MODULE_API static string letsaveittoo;
+static d3_zone * letssaveit;
+static string letsaveittoo;
 
 
 MODULE_API void load_initial(char *orientations, char *stresses) {
@@ -45,7 +54,7 @@ MODULE_API int get_crack_stress(double x, double y, double z, double planar_angl
     Stensor diag;
     double xx_az = letssaveit->get_orientation(x,y,z);
     diag.xx = letssaveit -> get_planar(x,y,z,xx_az);
-    diag.yy = letssaveit -> get_planar(x,y,z,xx_az + M_PI_2);
+    diag.yy = letssaveit -> get_planar(x,y,z,xx_az + M_PI/2.0);
     diag.zz = letssaveit -> p->get_pressure(x,y,z);
     //rotating tensors :)
     ret->xx = diag.xx * pow(sin(planar_angle),2) + diag.yy * pow(cos(planar_angle),2);
