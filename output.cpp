@@ -75,7 +75,8 @@ string output::get_formatted_output() {
 
     if(fin_ISREADY)
         ret << "Multiplicative constant: " << finAnswer(0) << endl << "Additive constant:" << finAnswer(1);
-    return ret.str();
+    string to_ret = ret.str();
+    return to_ret;
 }
 
 string output::make_Ppolynom(data_points<data_point_with_azimuth> &subj, sub_pol polPHI, sub_pol polXI) {

@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
         d3Zone.cut_to_layers();
         d3Zone.layer_exec();
 
-
+        cout << d3Zone.layers[0].out->get_formatted_output();
     }
     catch(int a)
     {
