@@ -74,6 +74,7 @@ public:
     data_points(string &filename, int en = 0);
     data_points(vector<T> &D, string t = "");
     data_points<T> get_randomized_part(double per);
+    void update(data_points<T> & upd);
     int equation_num;
     vector<T> data;
 };
@@ -120,6 +121,13 @@ data_points<T> data_points<T>::get_randomized_part(double per)
     }
     return data_points<T>(to_ret, tag);
 
+};
+
+template <typename T>
+void data_points<T>::update(data_points<T> &upd)
+{
+    data.insert(std::end(data), std::begin(upd.data), std::end(upd.data));
+    //maybe additional filtering is needed
 };
 
 #endif //STRESS_REC_REFACTORED_DATA_POINTS_H
