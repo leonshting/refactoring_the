@@ -9,6 +9,7 @@ settings::settings(string &filename) {
     default_order = 3; int count = 0; num_of_validations = 5;
     upper_order = 10; sizes_set = false; n_pressure_steps = 1000; Z_set = false;
     define_z_by_densities = false; static_division = false;
+    num_of_layers = 1;
     ifstream i_some(filename);
     string keyword, tag; int order; cd zero, pole;
     double tmp1, tmp2;
@@ -70,7 +71,7 @@ settings::settings(string &filename) {
 }
 
 settings::settings() {
-    default_order = 3;int count = 0; num_of_validations = 5;
+    default_order = 3;int count = 0; num_of_validations = 5; num_of_layers = 1;
     upper_order = 10; sizes_set = false; n_pressure_steps = 1000;
     Z_set = false; define_z_by_densities = false; static_division = false;
 }

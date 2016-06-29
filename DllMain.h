@@ -22,6 +22,7 @@ extern "C" {
 #  define MODULE_API
 #endif
 
+#define MODULE_API
 struct Stensor
         {
                 double xx; double yy; double zz; double xy; double xz; double yz;
@@ -29,6 +30,8 @@ struct Stensor
 
 // three functions must be executed in before using non-void functions
 MODULE_API void load_initial(char * orientations, char * stresses);
+MODULE_API void load_initial_w_sets(char *orientations, char *stresses, char *sets);
+// one of the load_initial* functions must be called, but load_initial_w_sets requires one more file - settings and this function is preferred
 MODULE_API void load_pressures(char * upper_pressures, char * densitites);
 
 MODULE_API void exec_initial();
@@ -36,6 +39,7 @@ MODULE_API void exec_initial();
 // /++\ /++\
 // |||  ||| these three functions
 // |||  ||| in the following order load_initial(), load_pressures(), exec_initial()
+
 
 MODULE_API double get_stress(double x, double y, double z, double azimuth);
 
@@ -47,6 +51,8 @@ MODULE_API int get_tensor_xyz0(double x, double y, double z, Stensor * ret);
 MODULE_API int get_tensor_main(double x, double y, double z, Stensor * ret);
 MODULE_API double get_orientation(double x, double y, double z);
 MODULE_API void stress_before(double *point, double *direction0, double *direction1, double *direction2, double *sigma);
+//get_tensorxyz0(...) crashes if init_crack(...) have not been called
+// as does stress_before(...)
 MODULE_API void stress_after(double *point, double *direction0, double *direction1, double *direction2, double *sigma);
 
 

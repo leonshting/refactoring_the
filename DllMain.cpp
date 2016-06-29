@@ -20,9 +20,10 @@
 
 using namespace std;
 
-static d3_zone * letssaveit;
-static d3_zone * before;
+static d3_zone * letssaveit = nullptr;
+static d3_zone * before = nullptr;
 static string letsaveittoo;
+
 
 
 MODULE_API void load_initial(char *orientations, char *stresses) {
@@ -33,6 +34,17 @@ MODULE_API void load_initial(char *orientations, char *stresses) {
     d3_zone d3Zone(azimuth_data, stress_data, Settings);
     letssaveit = new d3_zone(d3Zone);
 }
+
+MODULE_API void load_initial_w_sets(char *orientations, char *stresses, char *sets) {
+    string azimuth_data(orientations);
+    letsaveittoo = string(azimuth_data);
+    string stress_data(stresses);
+    string Sets(sets);
+    settings Settings(Sets);
+    d3_zone d3Zone(azimuth_data, stress_data, Settings);
+    letssaveit = new d3_zone(d3Zone);
+}
+
 
 MODULE_API void load_pressures(char * upper_pressures, char * densities)
 {
@@ -129,11 +141,16 @@ MODULE_API void stress_before(double *point, double *direction0, double *directi
 }
 
 MODULE_API int get_tensor_xyz0(double x, double y, double z, Stensor *ret) {
-    ret->xx = before -> get_planar(x,y,z,0.0);
-    ret->xy = before -> get_shear(x,y,z,0.0);
-    ret->yy = before -> get_planar(x,y,z,M_PI/2.0);
-    ret->zz = before -> p->get_pressure(x,y,z);
-    return 1;
+    if(ret != nullptr) {
+        ret->xx = before->get_planar(x, y, z, 0.0);
+        ret->xy = before->get_shear(x, y, z, 0.0);
+        ret->yy = before->get_planar(x, y, z, M_PI / 2.0);
+        ret->zz = before->p->get_pressure(x, y, z);
+        return 1;
+    }
+    else
+        throw ("Initialize crack please\n");
+
 }
 
 
