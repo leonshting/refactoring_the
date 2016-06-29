@@ -41,6 +41,7 @@ public:
     void rerun_stress();
     void update_stresses(data_points<data_point_with_stress_3d> &some);
     double get_planar(double x, double y, double z, double Azimuth);
+    double get_shear(double x, double y, double z, double Azimuth);
     double get_orientation(double x, double y, double z);
     int get_num_of_layers();
     double get_next_upper();

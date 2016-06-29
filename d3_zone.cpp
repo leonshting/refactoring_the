@@ -215,6 +215,19 @@ double d3_zone::get_orientation(double x, double y, double z) {
     return layers[numz].out->get_orientation(cd(x,y), layers[numz].Data.tag);
 }
 
+double d3_zone::get_shear(double x, double y, double z, double Azimuth) {
+    int numz = get_layer_num(x, y, z);
+    if(layers[numz].out->fin_ISREADY)
+    {
+        return layers[numz].out->get_shear(cd(x, y), Azimuth, layers[numz].Data.tag);
+    }
+    else
+    {
+        throw("Reconstruction is incomplete\n");
+    }
+
+}
+
 
 bool compare_by_Z_stress(data_point_with_stress_3d &first, data_point_with_stress_3d &second) {
     return (first.Z < second.Z);

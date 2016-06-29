@@ -41,7 +41,16 @@ MODULE_API double get_stress(double x, double y, double z, double azimuth);
 
 
 MODULE_API void init_crack(double *x, double *y, double *z, double *azimuths, double *pressures);
-MODULE_API int get_crack_stress(double x, double y, double z, double planar_angle, Stensor * ret);
+MODULE_API int get_stress_tensor(double x, double y, double z, double planar_angle, Stensor * ret);
+MODULE_API int get_tensor_xyz(double x, double y, double z, Stensor * ret);
+MODULE_API int get_tensor_xyz0(double x, double y, double z, Stensor * ret);
+MODULE_API int get_tensor_main(double x, double y, double z, Stensor * ret);
+MODULE_API double get_orientation(double x, double y, double z);
+MODULE_API void stress_before(double *point, double *direction0, double *direction1, double *direction2, double *sigma);
+MODULE_API void stress_after(double *point, double *direction0, double *direction1, double *direction2, double *sigma);
+
+
+
 
 #ifdef __cplusplus
 }

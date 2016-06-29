@@ -21,6 +21,7 @@
 using namespace std;
 
 static d3_zone * letssaveit;
+static d3_zone * before;
 static string letsaveittoo;
 
 
@@ -50,12 +51,10 @@ MODULE_API double get_stress(double x, double y, double z, double azimuth) {
     return letssaveit->get_planar(x,y,z,azimuth);
 }
 
-MODULE_API int get_crack_stress(double x, double y, double z, double planar_angle, Stensor *ret) {
+MODULE_API int get_stress_tensor(double x, double y, double z, double planar_angle, Stensor *ret) {
     Stensor diag;
-    double xx_az = letssaveit->get_orientation(x,y,z);
-    diag.xx = letssaveit -> get_planar(x,y,z,xx_az);
-    diag.yy = letssaveit -> get_planar(x,y,z,xx_az + M_PI/2.0);
-    diag.zz = letssaveit -> p->get_pressure(x,y,z);
+    get_tensor_main(x,y,z,&diag);
+    planar_angle -= get_orientation(x,y,z);
     //rotating tensors :)
     ret->xx = diag.xx * pow(sin(planar_angle),2) + diag.yy * pow(cos(planar_angle),2);
     ret->yy = diag.xx * pow(cos(planar_angle),2) + diag.yy * pow(sin(planar_angle),2);
@@ -66,7 +65,22 @@ MODULE_API int get_crack_stress(double x, double y, double z, double planar_angl
     return 1;
 }
 
+MODULE_API int get_tensor_xyz(double x, double y, double z, Stensor * ret)
+{
+    ret->xx = letssaveit -> get_planar(x,y,z,0.0);
+    ret->xy = letssaveit -> get_shear(x,y,z,0.0);
+    ret->yy = letssaveit -> get_planar(x,y,z,M_PI/2.0);
+    ret->zz = letssaveit -> p->get_pressure(x,y,z);
+    return 1;
+}
 
+MODULE_API int get_tensor_main(double x, double y, double z, Stensor * ret)
+{
+    ret->xx = letssaveit -> get_planar(x,y,z,letssaveit->get_orientation(x,y,z));
+    ret->yy = letssaveit -> get_planar(x,y,z,letssaveit->get_orientation(x,y,z) + M_PI/2.0);
+    ret->zz = letssaveit -> p->get_pressure(x,y,z);
+    return 1;
+}
 
 MODULE_API void init_crack(double *x, double *y, double *z, double *azimuths, double *pressures, int num) {
     vector<data_point_with_stress_3d> tmp;
@@ -76,9 +90,55 @@ MODULE_API void init_crack(double *x, double *y, double *z, double *azimuths, do
         tmp.push_back(dp);
     }
     data_points<data_point_with_stress_3d> dps(tmp);
+    before = new d3_zone(*letssaveit);
     letssaveit->update_stresses(dps);
     letssaveit->rerun_stress();
 }
+
+MODULE_API double get_orientation(double x, double y, double z)
+{
+    return letssaveit->get_orientation(x,y,z);
+}
+
+MODULE_API void stress_after(double *point, double *direction0, double *direction1, double *direction2, double *sigma) {
+    Stensor diag;
+    get_tensor_xyz(point[0], point[1], point[2], &diag);
+    sigma[0] = (direction0[0]*diag.xx + direction0[1]*diag.xy + direction0[2]*diag.xz) * direction0[0] +
+               (direction0[0]*diag.xy + direction0[1]*diag.yy + direction0[2]*diag.yz) * direction0[1] +
+               (direction0[0]*diag.xz + direction0[1]*diag.yz + direction0[2]*diag.zz) * direction0[2];
+    sigma[1] = (direction1[0]*diag.xx + direction1[1]*diag.xy + direction1[2]*diag.xz) * direction1[0] +
+               (direction1[0]*diag.xy + direction1[1]*diag.yy + direction1[2]*diag.yz) * direction1[1] +
+               (direction1[0]*diag.xz + direction1[1]*diag.yz + direction1[2]*diag.zz) * direction1[2];
+    sigma[2] = (direction2[0]*diag.xx + direction2[1]*diag.xy + direction2[2]*diag.xz) * direction2[0] +
+               (direction2[0]*diag.xy + direction2[1]*diag.yy + direction2[2]*diag.yz) * direction2[1] +
+               (direction2[0]*diag.xz + direction2[1]*diag.yz + direction2[2]*diag.zz) * direction2[2];
+}
+
+MODULE_API void stress_before(double *point, double *direction0, double *direction1, double *direction2, double *sigma) {
+    Stensor diag;
+    get_tensor_xyz0(point[0], point[1], point[2], &diag);
+    sigma[0] = (direction0[0]*diag.xx + direction0[1]*diag.xy + direction0[2]*diag.xz) * direction0[0] +
+               (direction0[0]*diag.xy + direction0[1]*diag.yy + direction0[2]*diag.yz) * direction0[1] +
+               (direction0[0]*diag.xz + direction0[1]*diag.yz + direction0[2]*diag.zz) * direction0[2];
+    sigma[1] = (direction1[0]*diag.xx + direction1[1]*diag.xy + direction1[2]*diag.xz) * direction1[0] +
+               (direction1[0]*diag.xy + direction1[1]*diag.yy + direction1[2]*diag.yz) * direction1[1] +
+               (direction1[0]*diag.xz + direction1[1]*diag.yz + direction1[2]*diag.zz) * direction1[2];
+    sigma[2] = (direction2[0]*diag.xx + direction2[1]*diag.xy + direction2[2]*diag.xz) * direction2[0] +
+               (direction2[0]*diag.xy + direction2[1]*diag.yy + direction2[2]*diag.yz) * direction2[1] +
+               (direction2[0]*diag.xz + direction2[1]*diag.yz + direction2[2]*diag.zz) * direction2[2];
+}
+
+MODULE_API int get_tensor_xyz0(double x, double y, double z, Stensor *ret) {
+    ret->xx = before -> get_planar(x,y,z,0.0);
+    ret->xy = before -> get_shear(x,y,z,0.0);
+    ret->yy = before -> get_planar(x,y,z,M_PI/2.0);
+    ret->zz = before -> p->get_pressure(x,y,z);
+    return 1;
+}
+
+
+
+
 
 
 
